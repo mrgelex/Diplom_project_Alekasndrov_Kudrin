@@ -27,6 +27,7 @@ with con:
             name TEXT NOT NULL,
             login TEXT NOT NULL,
             pass TEXT NOT NULL,
+            tg_id TEXT,
             FOREIGN KEY (client_id) REFERENCES CLIENT (client_id) ON UPDATE CASCADE ON DELETE RESTRICT
         );
     """)
@@ -86,6 +87,7 @@ with con:
             depth INTEGER NOT NULL,
             power INTEGER NOT NULL,
             status_string INTEGER,
+            data TEXT,
             FOREIGN KEY (device_id) REFERENCES DEVICE (device_id) ON UPDATE CASCADE ON DELETE CASCADE
         );
     """)
@@ -100,6 +102,7 @@ with con:
             depth INTEGER NOT NULL,
             power INTEGER NOT NULL,
             status_string INTEGER,
+            data TEXT,
             FOREIGN KEY (device_id) REFERENCES DEVICE (device_id) ON UPDATE CASCADE ON DELETE CASCADE
         );
     """)
