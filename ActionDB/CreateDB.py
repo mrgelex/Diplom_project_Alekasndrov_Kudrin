@@ -1,5 +1,6 @@
 import sqlite3 as sl
-con = sl.connect('Logs.db')
+pathDB='Logs.db'
+con = sl.connect(pathDB)
 with con:
     con.execute("""PRAGMA foreign_keys = ON;""")
     con.execute("""
@@ -26,7 +27,8 @@ with con:
             client_id INTEGER NOT NULL,
             name TEXT NOT NULL,
             login TEXT NOT NULL,
-            pass TEXT NOT NULL,
+            password TEXT NOT NULL,
+            tg_id TEXT,
             FOREIGN KEY (client_id) REFERENCES CLIENT (client_id) ON UPDATE CASCADE ON DELETE RESTRICT
         );
     """)
@@ -86,6 +88,7 @@ with con:
             depth INTEGER NOT NULL,
             power INTEGER NOT NULL,
             status_string INTEGER,
+            data TEXT,
             FOREIGN KEY (device_id) REFERENCES DEVICE (device_id) ON UPDATE CASCADE ON DELETE CASCADE
         );
     """)
@@ -100,6 +103,7 @@ with con:
             depth INTEGER NOT NULL,
             power INTEGER NOT NULL,
             status_string INTEGER,
+            data TEXT,
             FOREIGN KEY (device_id) REFERENCES DEVICE (device_id) ON UPDATE CASCADE ON DELETE CASCADE
         );
     """)
