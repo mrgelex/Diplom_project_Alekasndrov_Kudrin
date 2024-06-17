@@ -3,14 +3,14 @@ from django.http import HttpResponse
 from .models import *
 from .forms import *
 
-class User:
-    def __init__(self, userid, name, login, password, clname, clrule):
-        self.userid=userid
-        self.name=name
-        self.login=login
-        self.password=password
-        self.clname=clname
-        self.clrule=clrule
+# class User:
+#     def __init__(self, userid, name, login, password, clname, clrule):
+#         self.userid=userid
+#         self.name=name
+#         self.login=login
+#         self.password=password
+#         self.clname=clname
+#         self.clrule=clrule
 
 
 def showLogin(request):
@@ -25,13 +25,15 @@ def showLogin(request):
                     userid=i.user_id
                     clientid=i.client_id
                     name=i.name
-                    login=i.login
-                    password=i.password
+                    # login=i.login
+                    # password=i.password
                 clientData=Clienttab.objects.filter(client_id=clientid)
                 for j in clientData:
                     clname=j.name
                     clrule=j.rule_id
-                user=User(userid, name, login, password, clname, clrule)
+                user={'userid':userid, 'name':name, 'clname':clname, 'clrule':clrule}
+                request.session['user']=user
+                return redirect('all')
             else:
                 return HttpResponse('Неправильный логин или пароль!')
         else:
