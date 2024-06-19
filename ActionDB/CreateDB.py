@@ -6,6 +6,7 @@ with con:
     con.execute("""
         CREATE TABLE RULES (
             rule_id INTEGER NOT NULL PRIMARY KEY,
+            name TEXT NOT NULL UNIQUE,
             web BOOL NOT NULL,
             setting BOOL NOT NULL,
             control BOOL NOT NULL,
@@ -16,7 +17,7 @@ with con:
     con.execute("""
         CREATE TABLE CLIENT (
             client_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            name TEXT NOT NULL UNIQUE,
             rule_id INTEGER NOT NULL,
             FOREIGN KEY (rule_id) REFERENCES RULES (rule_id) ON UPDATE CASCADE ON DELETE RESTRICT
         );
@@ -26,7 +27,7 @@ with con:
             user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             client_id INTEGER NOT NULL,
             name TEXT NOT NULL,
-            login TEXT NOT NULL,
+            login TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             tg_id TEXT,
             FOREIGN KEY (client_id) REFERENCES CLIENT (client_id) ON UPDATE CASCADE ON DELETE RESTRICT
@@ -37,6 +38,7 @@ with con:
             folder_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             client_id INTEGER NOT NULL,
             root_folder INTEGER,
+            name TEXT NOT NULL UNIQUE,
             FOREIGN KEY (client_id) REFERENCES CLIENT (client_id) ON UPDATE CASCADE ON DELETE RESTRICT,
             FOREIGN KEY (root_folder) REFERENCES FOLDER (folder_id) ON UPDATE CASCADE ON DELETE RESTRICT
         );
@@ -56,8 +58,8 @@ with con:
         CREATE TABLE DEVICE (
             device_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             folder_id INTEGER NOT NULL,
-            name_user TEXT NOT NULL,
-            IMEI TEXT NOT NULL,
+            name_user TEXT NOT NULL UNIQUE,
+            IMEI TEXT NOT NULL UNIQUE,
             description TEXT,
             IP TEXT NOT NULL,
             port INTEGER NOT NULL,
