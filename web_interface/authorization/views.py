@@ -33,7 +33,7 @@ def showLogin(request):
                     clrule=j.rule_id
                 user={'userid':userid, 'name':name, 'clname':clname, 'clrule':clrule}
                 request.session['user']=user
-                return redirect('all')
+                return redirect('devices')
             else:
                 return HttpResponse('Неправильный логин или пароль!')
         else:
