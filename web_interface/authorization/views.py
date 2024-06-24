@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .models import *
 from .forms import *
 
@@ -33,4 +34,4 @@ def showLogin(request):
 def logout(request):
     session=request.session
     session.flush()
-    return redirect('authorization/login')
+    return redirect('login')
