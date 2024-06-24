@@ -36,7 +36,7 @@ with con:
     con.execute("""
         CREATE TABLE FOLDER (
             folder_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            client_id INTEGER NOT NULL,
+            client_id INTEGER,
             root_folder INTEGER,
             name TEXT NOT NULL UNIQUE,
             FOREIGN KEY (client_id) REFERENCES CLIENT (client_id) ON UPDATE CASCADE ON DELETE RESTRICT,
