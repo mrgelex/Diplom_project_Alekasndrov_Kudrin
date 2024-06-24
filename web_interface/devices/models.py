@@ -14,6 +14,7 @@ class Foldertab(models.Model):
     folder_id=models.IntegerField()
     client_id=models.IntegerField()
     root_folder=models.IntegerField()
+    name=models.CharField()
 
     class Meta:
         managed=False

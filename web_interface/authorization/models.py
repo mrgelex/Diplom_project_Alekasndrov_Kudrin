@@ -23,6 +23,7 @@ class Clienttab(models.Model):
 
 class Rulestab(models.Model):
     rule_id=models.IntegerField()
+    name=models.CharField()
     web=models.BooleanField()
     setting=models.BooleanField()
     control=models.BooleanField()

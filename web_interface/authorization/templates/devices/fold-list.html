@@ -1,0 +1,12 @@
+{% extends 'authorization/basic.html' %}
+{% block title %} {{Объекты}} {% endblock %}
+{% block body %}
+<h2>Доступные объекты</h2>
+
+{% for item in rootFoldata %}
+<div class="foldlist-item">
+    <a href="{% url 'showbush' item.folder_id %}"> {{item.name}} </a>
+</div>
+{% endfor %}
+<a href="logout">Выйти из системы</a>
+{% endblock %}

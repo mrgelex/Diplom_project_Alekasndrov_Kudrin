@@ -1,19 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import *
 from .forms import *
 
-# class User:
-#     def __init__(self, userid, name, login, password, clname, clrule):
-#         self.userid=userid
-#         self.name=name
-#         self.login=login
-#         self.password=password
-#         self.clname=clname
-#         self.clrule=clrule
-
-
 def showLogin(request):
+    text=''
     if request.method == 'POST':
         dataform=Loginform(request.POST)
         if dataform.is_valid():
@@ -25,8 +15,6 @@ def showLogin(request):
                     userid=i.user_id
                     clientid=i.client_id
                     name=i.name
-                    # login=i.login
-                    # password=i.password
                 clientData=Clienttab.objects.filter(client_id=clientid)
                 for j in clientData:
                     clname=j.name
@@ -35,17 +23,13 @@ def showLogin(request):
                 request.session['user']=user
                 return redirect('devices')
             else:
-                return HttpResponse('Неправильный логин или пароль!')
+                text='Неправильный логин или пароль!'
         else:
-            return HttpResponse('Неправильный ввод!')
+            text='Неправильный ввод!'
     form=Loginform()
-    return render(request, 'authorization/login', {'form':form})
+    return render(request, 'authorization/login', {'form':form, 'error':text})
 
-# class ClientRule:
-#     def __init__(self, web, setting, control, report):
-#         self.web=web
-#         self.setting=setting
-#         self.control=control
-#         self.report=report
-
-
+def logout(request):
+    session=request.session
+    session.flush()
+    return redirect('login')
