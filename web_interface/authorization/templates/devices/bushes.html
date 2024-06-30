@@ -1,5 +1,5 @@
 {% extends 'devices/basic-reload.html' %}
-{% block title %} {{Группы устройств}} {% endblock %}
+{% block title %} {{'Группы устройств'}} {% endblock %}
 {% block body %}
 <h2>Доступные группы</h2>
 
@@ -8,12 +8,12 @@
         <h4> {{bushObj.name}} </h4>
         {% for device in bushObj.deviceSet %}
             <p> {{device.name_user}} </p>
-            <p> {{IMEI}} </p>
+            <p> {{'IMEI'}} </p>
             <p> {{device.IMEI}} </p>
-            <p> {{IP устройста}} </p>
+            <p> {{'IP устройста'}} </p>
             <p> {{device.IP}} </p>
         {% endfor %}
     </div>
 {% endfor %}
-<a href="logout">Выйти из системы</a>
+<a href="http://127.0.0.1:8000/authorization/logout">Выйти из системы</a>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .models import *
 from .forms import *
 
@@ -21,13 +22,14 @@ def showLogin(request):
                     clrule=j.rule_id
                 user={'userid':userid, 'name':name, 'clname':clname, 'clrule':clrule}
                 request.session['user']=user
+                print('пользователь сохранен')
                 return redirect('devices')
             else:
                 text='Неправильный логин или пароль!'
         else:
             text='Неправильный ввод!'
     form=Loginform()
-    return render(request, 'authorization/login', {'form':form, 'error':text})
+    return render(request, 'authorization/log-in-out.html', {'form':form, 'error':text})
 
 def logout(request):
     session=request.session
