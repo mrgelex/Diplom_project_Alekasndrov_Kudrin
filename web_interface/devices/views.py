@@ -16,16 +16,16 @@ class Bush:
 
 def allFold(request):
 
-    def addnestFold(dictFold, FoldId):
+    def addnestFold(dictFold, foldId):
         DataList=[]
-        nestFold=list(allFold.filter(root_folder=FoldId).values('folder_id', 'root_folder', 'name')) # каталог 1 и он корневой; найти вложенные каталоги в лист
+        nestFold=list(allFold.filter(root_folder=foldId).values('folder_id', 'root_folder', 'name')) # каталог 1 и он корневой; найти вложенные каталоги в лист
         for i in nestFold:
             i['rule_id']=dictFold.get('rule_id') # каждой группе добавиить роль корневого каталога
             DataList.append(i)
         return DataList
     
-    def addfold(dictFold, FoldId):
-        foldData=allFold.get(folder_id=FoldId) # выбрать данные по одному каталогу
+    def addfold(dictFold, foldId):
+        foldData=allFold.get(folder_id=foldId) # выбрать данные по одному каталогу
         dictFold['name']=foldData.name # добавить имя каталога к правам
         dictFold['root_folder']=foldData.root_folder # добавить id корневого каталога к правам
         return dictFold
