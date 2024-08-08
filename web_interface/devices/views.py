@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
+import socket_mod as s
 
 webAcces=10
 
@@ -24,40 +25,41 @@ def allFold(request):
             DataList.append(i)
         return DataList
     
-    def addfold(dictFold, foldId):
+    def addFold(dictFold, foldId):
         foldData=allFold.get(folder_id=foldId) # выбрать данные по одному каталогу
         dictFold['name']=foldData.name # добавить имя каталога к правам
         dictFold['root_folder']=foldData.root_folder # добавить id корневого каталога к правам
         return dictFold
 
     if not 'user' in request.session:
-        print('нет пользователя')
+        # print('нет пользователя')
         return redirect('login')
     if 'oneFold' in request.session:
-        print('есть 1 вложенный каталог')
+        # print('есть 1 вложенный каталог')
         idFol=request.session['rootOne']
         # return redirect('onlyBush')
         return redirect(reverse('showbush', args=[idFol]))
     if 'manyFold' in request.session:
-        print('есть вложенные каталоги')
+        # print('есть вложенные каталоги')
         if 'rootOne' in request.session:
             idFol=request.session['rootOne']
         # return redirect('onlyBush')
             return redirect(reverse('showbush', args=[idFol]))
     user=request.session['user']
+    if user.get('clrule') < webAcces:
+        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
     allFold=Foldertab.objects.all()
-    if not 'rootOne' in request.session:
-    # if not 'rootOne' or 'rootMany' in request.session:
-        print('нет корневых')
+    if not 'rootOne' or not 'rootMany' in request.session:
+        # print('нет корневых')
         userPerm=UserPermtab.objects.filter(user_id=user.get('userid'))# это все права пользователя в querySet
         foldList=list(userPerm.values('folder_id', 'rule_id')) # это лист со словорями права для каталогов
         folDataList=[]
         if len(foldList) < 2: # 1 каталог?
-            print('foldList < 2')
+            # print('foldList < 2')
             oneFoldId=foldList[0].get('folder_id')# id этого каталога
-            dictFold=addfold(foldList[0], oneFoldId)
+            dictFold=addFold(foldList[0], oneFoldId)
             if dictFold.get('root_folder'): # этот каталог не корневой?
-                print('один каталог группа с устройствами')
+                # print('один каталог группа с устройствами')
                 request.session['oneFold']=dictFold
                 request.session['rootOne']=dictFold.get('root_folder')
                 # return redirect('onlyBush')
@@ -70,16 +72,16 @@ def allFold(request):
         for i in foldList:
             rootValid=list(allFold.filter(folder_id=i.get('folder_id')).values_list('root_folder', flat=True)) # выбрать все корневые по id
             if not rootValid[0]: # это корневой
-                print(rootValid[0])
+                # print(rootValid[0])
                 folDataList=folDataList+addnestFold(i, i.get('folder_id'))
                 rootFolList.append(i.get('folder_id'))
             else:
-                folDataList.append(addfold(i, i.get('folder_id')))
+                folDataList.append(addFold(i, i.get('folder_id')))
                 rootFolList=rootFolList+rootValid
         request.session['manyFold']=folDataList
         rootFolList=list(set(rootFolList))
         if len(rootFolList) < 2:
-            print('меньше двух корневых')
+            # print('меньше двух корневых')
             request.session['rootOne']=rootFolList
             # return redirect('onlyBush')
             return redirect(reverse('showbush', args=[rootFolList[0]]))
@@ -92,33 +94,73 @@ def allFold(request):
 
 
 def showBush(request, idFol):
-    print(idFol)
+    # print(idFol)
     if not 'user' in request.session:
         return redirect('login')
     if 'manyFold' in request.session:
         foldData=request.session['manyFold']
     elif 'oneFold' in request.session:
         foldData=[request.session['oneFold']]
-        print(foldData)
+        # print(foldData)
     else:
-        print('нет каталогов')
+        pass
+        # print('нет каталогов')
     user=request.session['user']
     if 'rootMany' in request.session:
         rootSession=request.session['rootMany']
     if 'rootOne' in request.session:
         rootSession=[request.session['rootOne']]
-    print(rootSession)
+    # print(rootSession)
     if not idFol in rootSession:
         return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу'})
     selectFold=[]
     for i in foldData:
-        print(i)
+        # print(i)
         if i.get('root_folder')==idFol:
             bushObj=Bush(i.get('folder_id'), i.get('name'), i.get('rule_id'))
             bushObj.access(user.get('clrule'))
             if bushObj.rule >= webAcces:
                 bushObj.deviceSet=Devicetab.objects.filter(folder_id=i.get('folder_id'))
+                # при помощи метода setattr()
+                # for j in bushObj.deviceSet:
+                # print(bushObj.deviceSet)
                 selectFold.append(bushObj)
+                devlist=list(bushObj.deviceSet.values_list('device_id', flat=True))
+                dictDev={}
+                if 'validF' in request.session:
+                    print('данные в сессии есть')
+                    validF=request.session['validF']
+                    if not isinstance(validF, list):
+                         validF=[validF]
+                         print('преобразован в список', validF)
+                    if not i.get('folder_id') in validF:
+                        print('каталога в сессии нет')
+                        print('исследуемый каталог',i.get('folder_id'))
+                        validF.append(i.get('folder_id'))
+                        request.session['validF']=validF
+                        print('список до записи', validF)
+                        print('каталог записан', request.session['validF'])
+                        if 'accesD' in request.session:
+                            accesD=request.session['accesD']
+                            print('yes', accesD)
+                        else:
+                            accesD={}
+                            print('no', accesD)
+                        for i in devlist:
+                            dictDev[i]=bushObj.rule
+                        accesD.update(dictDev)
+                        print('полученный словарь устройств', accesD)
+                        request.session['accesD']=accesD
+                    pass
+                else:
+                    request.session['validF']=i.get('folder_id')
+
+                    print('каталог не проверен и вообще нет данных в сессии', 'первый записан', request.session['validF'])
+                    for i in devlist:
+                        dictDev[i]=bushObj.rule
+                    request.session['accesD']=dictDev
+                    print('словарь записан', request.session['accesD'])
+
     if not selectFold:
-        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень просмотра ограничен'})
+        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
     return render(request, 'devices/bushes.html', {'selectFold':selectFold,'user':user})

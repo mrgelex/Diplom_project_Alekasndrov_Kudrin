@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
 from .forms import *
+import write_log as log
 
 def showLogin(request):
     text=''
@@ -23,6 +24,7 @@ def showLogin(request):
                 user={'userid':userid, 'name':name, 'clname':clname, 'clrule':clrule}
                 request.session['user']=user
                 print('пользователь сохранен')
+                log.write(userid, 1)
                 return redirect('devices')
             else:
                 text='Неправильный логин или пароль!'
@@ -33,5 +35,7 @@ def showLogin(request):
 
 def logout(request):
     session=request.session
+    user=session['user']
+    log.write(user.get('userid'), 2)
     session.flush()
     return redirect('login')
