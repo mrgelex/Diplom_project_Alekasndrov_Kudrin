@@ -26,4 +26,4 @@ urlpatterns = [
     path('charts/', include('charts.urls')),
     path('authorization/', include('authorization.urls')),
     path('setpoints/', include('setpoints.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

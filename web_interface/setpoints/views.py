@@ -8,37 +8,74 @@ viewSetpAcc=30
 changSetAcc=40
 
 def showSetpoints(request, idDev):
+    rel=False
     if not 'user' in request.session:
         return redirect('login')
     if not 'accesD' in request.session:
         return redirect('devices')
     accesD=request.session['accesD']
     mess=''
-    if not idDev in accesD:
+    if not str(idDev) in accesD:
         return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу'})
-    accesLvl=accesD.get(idDev)
+    accesLvl=accesD.get(str(idDev))
     devData=dict(Devicetab.objects.filter(device_id=idDev).values('name_user', 'description'))
     if accesLvl < viewSetpAcc:
         return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
     user=request.session['user']
     setpoint={}
+    SPd={}
     setP=Setpoints()
     if accesLvl < changSetAcc:
         if request.method=='POST':
-            mess=''
+            mess='Вы не можете изменять уставки!'
+        but=False
         setP.initial=setpoint
-        Setpoints.disable(setP)
+        setP.disable()
     else:
+        but=True
         if request.method=='POST':
             data=Setpoints(request.POST)
             if data.is_valid():
                 dictdata=data.cleaned_data
                 for i in dictdata:
+                    if i == 'EnUpECN':
+                        if dictdata.get(i):
+                            dictdata[i]='1'
+                        else:
+                            dictdata[i]='0'
                     if not dictdata.get(i):
                         dictdata[i]=setpoint.get(i)
                 setpoint=dictdata
-                mess=''
+                mess=s.writeSP(idDev, setpoint)
+                SPd[str(idDev)]=setpoint #вида {id:{a:1, b:2...n:n}}
+                if 'SPque' in request.session:
+                    SPque=request.session['SPque']
+                    if SPque.get(str(idDev)):
+                        mess='Сейчас уставки менять нельзя'
+                    SPque.update(SPd)
+                else:
+                    SPque=SPd
+                request.session['SPque']=SPque
                 log.write(user.get('userid'), 1, idDev)
             else:
-                mess=''
+                mess='Неправильная форма ввода уставок!'
+        if 'SPque' in request.session:
+            SPque=request.session['SPque']
+            sp=SPque.get(str(idDev))
+            if sp:
+                setpoint=sp
+                setP.disable()
+                mess='Подождите пока измененные уставки вступят в силу'
+                rel=True
+                but=False
+                if s.result(idDev):
+                    del SPque[str(idDev)]
+                    but=True
+
         setP.initial=setpoint
+        if rel:
+            return render(request, 'setpoints/setpoints-rel.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
+        else:
+            return render(request, 'setpoints/setpoints.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
+    
+        

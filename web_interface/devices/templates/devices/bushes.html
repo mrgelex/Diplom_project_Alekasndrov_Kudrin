@@ -6,12 +6,17 @@
 {% for bushObj in selectFold %}
     <div class="bushObj">
         <h4> {{bushObj.name}} </h4>
-        {% for device in bushObj.deviceSet %}
+        {% for device in bushObj.deviceDicts %}
             <p> {{device.name_user}} </p>
-            <p> {{'IMEI'}} </p>
-            <p> {{device.IMEI}} </p>
-            <p> {{'IP устройста'}} </p>
-            <p> {{device.IP}} </p>
+            <p> {{device.description}} </p>
+            <p> {{'Глубина'}} </p>
+            <p> {{device.Depth}} </p>
+            <p> {{'Мощность'}} </p>
+            <p>{{device.Power}}</p>
+            <p> {{'Скорость'}} </p>
+            <p>{{device.Speed}}</p>
+            <p> {{'Время до старта'}} </p>
+            <p>{{device.TimeBeforeStart}}</p>
         {% endfor %}
     </div>
 {% endfor %}

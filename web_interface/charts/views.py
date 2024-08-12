@@ -21,9 +21,9 @@ def showCharts(request, idDev):
     if not 'accesD' in request.session:
         return redirect('devices')
     accesD=request.session['accesD']
-    if not idDev in accesD:
+    if not str(idDev) in accesD:
         return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу'})
-    if accesD.get(idDev) < chartAcces:
+    if accesD.get(str(idDev)) < chartAcces:
         return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
 
 
