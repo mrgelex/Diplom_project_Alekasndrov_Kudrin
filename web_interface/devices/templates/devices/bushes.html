@@ -17,6 +17,9 @@
             <p>{{device.Speed}}</p>
             <p> {{'Время до старта'}} </p>
             <p>{{device.TimeBeforeStart}}</p>
+            {% if not bushObj.rule < 30 %}
+                <a href="{% url 'setpoints' device.device_id %}"> Уставки </a>
+            {% endif %}
         {% endfor %}
     </div>
 {% endfor %}

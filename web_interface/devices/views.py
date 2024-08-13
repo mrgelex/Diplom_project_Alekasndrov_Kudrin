@@ -127,7 +127,7 @@ def showBush(request, idFol):
                 deviceSet=Devicetab.objects.filter(folder_id=i.get('folder_id'))# .filter(folder_id=i.get('folder_id'), enable=True)
                 dDev=deviceSet.values('device_id', 'name_user','description')
                 for f in dDev:
-                    f.update(s.operData(f.get('device_id')))
+                    f.update(s.operData(f.get('device_id'), True))
                 # print(dDev)
                 bushObj.deviceDicts=dDev
                 devlist=list(deviceSet.values_list('device_id', flat=True))

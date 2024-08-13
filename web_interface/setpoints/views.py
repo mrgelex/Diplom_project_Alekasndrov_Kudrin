@@ -22,7 +22,9 @@ def showSetpoints(request, idDev):
     if accesLvl < viewSetpAcc:
         return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
     user=request.session['user']
-    setpoint={}
+    setpoint=s.operData(idDev, False)
+    if None in list(setpoint.values()):
+        mess='Нет связи'
     SPd={}
     setP=Setpoints()
     if accesLvl < changSetAcc:
@@ -68,9 +70,11 @@ def showSetpoints(request, idDev):
                 mess='Подождите пока измененные уставки вступят в силу'
                 rel=True
                 but=False
-                if s.result(idDev):
+                res, rmess=s.result(idDev)
+                if res:
                     del SPque[str(idDev)]
                     but=True
+                    mess=rmess
 
         setP.initial=setpoint
         if rel:

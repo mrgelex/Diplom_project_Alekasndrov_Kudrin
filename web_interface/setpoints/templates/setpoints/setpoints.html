@@ -1,0 +1,19 @@
+{% extends 'authorization/basic.html' %}
+{% block title %} 
+{{'Уставки'}} 
+{% endblock %}
+{% block body %}
+<h2>Уставки</h2>
+<form method="post">
+    {% csrf_token %}
+    {% for item in setP %}
+       <p>{{item.label_tag}}</p>
+      <p>{{item}}</p>
+    {% endfor %}
+    {%if but %}
+        <input type="submit" value="Применить" />
+    {%endif%}
+    
+</form>
+<span> {{mess}} </span>
+{% endblock %}
