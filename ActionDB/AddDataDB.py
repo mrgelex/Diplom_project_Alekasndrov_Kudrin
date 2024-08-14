@@ -1,5 +1,5 @@
 import sqlite3 as sl
-pathDB='Logs.db'
+pathDB='web_interface/Logs.db'
 con = sl.connect(pathDB)
 with con:
     con.execute("""PRAGMA foreign_keys = ON;""")
@@ -62,7 +62,7 @@ with con:
     con.execute("""INSERT INTO DEVICE (folder_id, name_user, IMEI, description, IP, port, modbus_over_tcp, add_pr200, add_tr16, add_inv, type_inv, GMT, enable) 
                 VALUES ('2', 'test_device', '1234567890', 'тестовая лебедка', '10.10.100.254', '8899', 'true', '10', '16', '1', 'danfoss', '+3', 'true')""")
     con.execute("""INSERT INTO DEVICE (folder_id, name_user, IMEI, description, IP, port, modbus_over_tcp, add_pr200, add_tr16, add_inv, type_inv, GMT, enable) 
-                VALUES ('2', 'test_device2', '1234567891', 'тестовая лебедка2', '127.0.0.1', '10201', 'true', '10', '16', '1', 'danfoss', '+3', 'true')""")
+                VALUES ('2', 'test_device2', '1234567891', 'тестовая лебедка2', '127.0.0.1', '10201', 'true', '10', '16', '1', 'danfoss', '+3', 'false')""")
     con.execute("""INSERT INTO DEVICE (folder_id, name_user, IMEI, description, IP, port, modbus_over_tcp, add_pr200, add_tr16, add_inv, type_inv, GMT, enable) 
                 VALUES ('3', 'test_device3', '1234567892', 'тестовая лебедка3', '127.0.0.1', '10201', 'true', '10', '16', '1', 'danfoss', '+3', 'false')""")
     con.execute("""INSERT INTO DEVICE (folder_id, name_user, IMEI, description, IP, port, modbus_over_tcp, add_pr200, add_tr16, add_inv, type_inv, GMT, enable) 

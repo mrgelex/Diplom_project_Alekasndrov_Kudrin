@@ -7,7 +7,7 @@ from threading import Thread
 from queue import Empty, Queue
 import time
 
-pathDB='Logs.db'
+pathDB='web_interface/Logs.db'
 
 class Device:
     def __init__(self,id_device,per):

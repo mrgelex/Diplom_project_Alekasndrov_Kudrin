@@ -2,9 +2,10 @@ from tkinter import *
 from tkinter import ttk
 import sqlite3 as sl
 from threading import Thread
+from web_interface.startweb import startweb
 import server
 
-pathDB='Logs.db'
+pathDB='web_interface/Logs.db'
 
 def unpack(data):
     ln=len(data)
@@ -82,7 +83,13 @@ class main_window:
         self.but_user=But(self.form.root,"Пользователи",lambda:scene_user(),TOP)
         self.but_run_server=But(self.form.root,"Запустить сервер",lambda:self.serv.Start(),TOP)
         self.but_stop_server=But(self.form.root,"Остановить сервер",lambda:self.serv.Stop(),TOP)
+        self.but_start_web=But(self.form.root,"Запустить web",lambda:self.RunServer(),TOP)
         self.form.root.mainloop()
+        
+    def RunServer(self):
+        self.th2=Thread(target=startweb)
+        self.th2.daemon=True
+        self.th2.start()
         
 class scene_device:
     def __init__(self):  

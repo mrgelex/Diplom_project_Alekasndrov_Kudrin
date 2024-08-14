@@ -2,7 +2,7 @@ import sqlite3 as sql
 from datetime import datetime
 
 def write(user_id, rectype_id, device_id=None):
-    db_conn=sql.connect('Logs.db')
+    db_conn=sql.connect('web_interface/Logs.db')
     curs=db_conn.cursor()
     curs.execute(
         "INSERT INTO JOURNAL (user_id, rectype_id, device_id, timestamp) VALUES(?, ?, ?, ?)",

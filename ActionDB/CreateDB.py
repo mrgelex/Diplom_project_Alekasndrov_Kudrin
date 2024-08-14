@@ -1,5 +1,5 @@
 import sqlite3 as sl
-pathDB='Logs.db'
+pathDB='web_interface/Logs.db'
 con = sl.connect(pathDB)
 with con:
     con.execute("""PRAGMA foreign_keys = ON;""")

@@ -5,7 +5,7 @@ import device
 from threading import Thread
 #from queue import Empty, Queue
 
-pathDB='Logs.db'
+pathDB='web_interface/Logs.db'
 
 class Server:
     def __init__(self):
