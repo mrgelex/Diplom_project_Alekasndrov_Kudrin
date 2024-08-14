@@ -58,8 +58,9 @@ def operData(id, mod):
         dVals={}
         vals=answer[2].split(',')
         for i in vals:
-            if lVal[1]=='NULL' and mod:
-                return {'Status_v9':'Нет связи','Depth':'Нет связи','Power':'Нет связи','Speed':'Нет связи','TimeBeforeStart':'Нет связи','NSucYes':'Нет связи','NSucTod':'Нет связи','NSucTot':'Нет связи'}
+            if lVal[1]=='NULL':
+                if mod:
+                    return {'Status_v9':'Нет связи','Depth':'Нет связи','Power':'Нет связи','Speed':'Нет связи','TimeBeforeStart':'Нет связи','NSucYes':'Нет связи','NSucTod':'Нет связи','NSucTot':'Нет связи'}
             elif lVal[1]=='NULL' and mod:
                 return {}
             lVal=i.split('=')
