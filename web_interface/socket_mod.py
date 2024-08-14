@@ -5,7 +5,7 @@ def result(id):
     sockObj=s.socket()
     ip=s.gethostname()
     numP=9898
-    sockObj.connect(ip, numP)
+    sockObj.connect((ip, numP))
     mess='STATUS_WRITE;'+str(id)
     sockObj.send(mess.encode())
     data=sockObj.recv(2048)
@@ -41,9 +41,10 @@ def convertType(lVal):
 
 def operData(id, mod):
     sockObj=s.socket()
-    ip=s.gethostname()
+    #ip=s.gethostname()
+    ip='localhost'
     numP=9898
-    sockObj.connect(ip, numP)
+    sockObj.connect((ip, numP))
     if mod:
         valStr='Status_v9,Depth,Power,Speed,TimeBeforeStart,NSucYes,NSucTod,NSucTot'
     else:
@@ -71,7 +72,7 @@ def writeSP(id, sp):
     sockObj=s.socket()
     ip=s.gethostname()
     numP=9898
-    sockObj.connect(ip, numP)
+    sockObj.connect((ip, numP))
     st=''
     for i in sp:
         st=st+i+'='+str(sp.get(i))+','
