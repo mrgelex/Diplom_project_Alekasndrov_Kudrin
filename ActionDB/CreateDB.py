@@ -26,7 +26,7 @@ with con:
         CREATE TABLE USER (
             user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             client_id INTEGER NOT NULL,
-            name TEXT NOT NULL,
+            name TEXT NOT NULL UNIQUE,
             login TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             tg_id TEXT,
@@ -69,6 +69,7 @@ with con:
             add_inv INTEGER,
             type_inv TEXT,
             GMT TEXT NOT NULL,
+            enable BOOL NOT NULL,
             FOREIGN KEY (folder_id) REFERENCES FOLDER (folder_id) ON UPDATE CASCADE ON DELETE RESTRICT
         );
     """)
