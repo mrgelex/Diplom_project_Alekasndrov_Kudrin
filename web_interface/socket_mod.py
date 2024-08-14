@@ -61,8 +61,8 @@ def operData(id, mod):
             if lVal[1]=='NULL':
                 if mod:
                     return {'Status_v9':'Нет связи','Depth':'Нет связи','Power':'Нет связи','Speed':'Нет связи','TimeBeforeStart':'Нет связи','NSucYes':'Нет связи','NSucTod':'Нет связи','NSucTot':'Нет связи'}
-            elif lVal[1]=='NULL' and mod:
-                return {}
+                else:
+                    return {}
             lVal=i.split('=')
             if not mod:
                 lVal=convertType(lVal)
