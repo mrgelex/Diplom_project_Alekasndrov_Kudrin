@@ -161,19 +161,19 @@ class Device:
         self.client.close()
         
     def GetData(self, req):
-        srq=req.split(sep=b",")
-        rsp=b""
+        srq=req.split(sep=",")
+        rsp=""
         for s in srq:
-            rsp=rsp+self.dict_resp[s.decode()].encode()+b","
-        rsp=rsp.rstrip(b",")
+            rsp=rsp+s+"="+str(self.dict_resp[s])+","
+        rsp=rsp.rstrip(",")
         return rsp
     
     def WriteData(self, req):
-        srq=req.split(sep=b",")
+        srq=req.split(sep=",")
         self.dict_write={}
         for s in srq:
-            a=s.split(b"=")
-            self.dict_write[a[0].decode()]=int(a[1].decode())
+            a=s.split("=")
+            self.dict_write[a[0]]=int(a[1])
         self.signal_write=True
             
         

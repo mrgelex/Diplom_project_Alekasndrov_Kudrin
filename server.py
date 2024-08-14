@@ -39,19 +39,24 @@ class Server:
         while self.enable:
             conn,addr=sock.accept()
             data=conn.recv(2048)
-            self.cmd=data.split(sep=b";")
-            if self.cmd[0]==b"READ_DATA":
+            print(data)
+            data=data.decode()
+            self.cmd=data.split(sep=";")
+            if self.cmd[0]=="READ_DATA":
                 try:
                     resp=self.dev[int(self.cmd[1])].GetData(self.cmd[2])
-                    conn.send(b"READ_DATA;"+self.cmd[1]+b";"+resp)
+                    snd="READ_DATA;"+self.cmd[1]+";"+resp
+                    conn.send(snd.encode())
                 except:
-                    conn.send(b"READ_DATA;"+self.cmd[1]+b";NULL")
-            elif self.cmd[0]==b"WRITE_DEVICE_SETTING":
+                    snd="READ_DATA;"+self.cmd[1]+";NULL"
+                    conn.send(snd.encode())
+            elif self.cmd[0]=="WRITE_DEVICE_SETTING":
                 pass
-            elif self.cmd[0]==b"STATUS_WRITE":
+            elif self.cmd[0]=="STATUS_WRITE":
                 pass
             else:
-                conn.send(b"UNKNOWN_COMMAND: "+data)
+                snd="UNKNOWN_COMMAND: "+data
+                conn.send(snd.encode())
             conn.close()
     
 #S=Server()

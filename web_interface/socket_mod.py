@@ -52,13 +52,14 @@ def operData(id, mod):
     mess='READ_DATA;'+str(id)+';'+valStr
     sockObj.send(mess.encode())
     data=sockObj.recv(2048)
+    print(data)
     answer=data.decode()
     answer=answer.split(';')
     if 'READ_DATA' in answer:
         dVals={}
         vals=answer[2].split(',')
         for i in vals:
-            if lVal[0]=='NULL':
+            if i=='NULL':
                 if mod:
                     return {'Status_v9':'Нет связи','Depth':'Нет связи','Power':'Нет связи','Speed':'Нет связи','TimeBeforeStart':'Нет связи','NSucYes':'Нет связи','NSucTod':'Нет связи','NSucTot':'Нет связи'}
                 else:
