@@ -23,7 +23,7 @@ def showSetpoints(request, idDev):
         return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
     user=request.session['user']
     setpoint=s.operData(idDev, False)
-    if None in list(setpoint.values()):
+    if not setpoint:
         mess='Нет связи'
     SPd={}
     setP=Setpoints()
