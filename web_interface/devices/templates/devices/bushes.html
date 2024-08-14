@@ -1,0 +1,27 @@
+{% extends 'devices/basic-reload.html' %}
+{% block title %} {{'Группы устройств'}} {% endblock %}
+{% block body %}
+<h2>Доступные группы</h2>
+
+{% for bushObj in selectFold %}
+    <div class="bushObj">
+        <h4> {{bushObj.name}} </h4>
+        {% for device in bushObj.deviceDicts %}
+            <p> {{device.name_user}} </p>
+            <p> {{device.description}} </p>
+            <p> {{'Глубина'}} </p>
+            <p> {{device.Depth}} </p>
+            <p> {{'Мощность'}} </p>
+            <p>{{device.Power}}</p>
+            <p> {{'Скорость'}} </p>
+            <p>{{device.Speed}}</p>
+            <p> {{'Время до старта'}} </p>
+            <p>{{device.TimeBeforeStart}}</p>
+            {% if not bushObj.rule < 30 %}
+                <a href="{% url 'setpoints' device.device_id %}"> Уставки </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}
+<a href="http://127.0.0.1:8000/authorization/logout">Выйти из системы</a>
+{% endblock %}
