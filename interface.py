@@ -72,18 +72,26 @@ class Cmbox:
         return self.cmbx.get()
     def set(self, data):
         self.cmbx.set(data)
-     
         
 class main_window:
     def __init__(self):
-        self.form=Form("TM Debit-E","520x400")
-        self.serv=server.Server()
-        self.but_device=But(self.form.root,"Устройства",lambda:scene_device(),TOP)
-        self.but_perm=But(self.form.root,"Права доступа",lambda:scene_perm("all",0),TOP)
-        self.but_user=But(self.form.root,"Пользователи",lambda:scene_user(),TOP)
-        self.but_run_server=But(self.form.root,"Запустить сервер",lambda:self.serv.Start(),TOP)
-        self.but_stop_server=But(self.form.root,"Остановить сервер",lambda:self.serv.Stop(),TOP)
-        self.but_start_web=But(self.form.root,"Запустить web",lambda:self.RunServer(),TOP)
+        self.form=Form("TM Debit-E","800x400")
+        self.lframe=Frame(self.form.root)
+        self.lframe.pack(side=LEFT)
+        self.rframe=Frame(self.form.root)
+        self.rframe.pack(side=RIGHT)
+        self.text=Text(self.lframe, wrap="word")
+        self.text.pack(side=LEFT)
+        self.text_scrl=Scrollbar(self.lframe, command=self.text.yview)
+        self.text_scrl.pack(side=LEFT, fill=Y)
+        self.text.config(yscrollcommand=self.text_scrl.set) 
+        self.serv=server.Server(self.text)
+        self.but_device=But(self.rframe,"Устройства",lambda:scene_device(),TOP)
+        self.but_perm=But(self.rframe,"Права доступа",lambda:scene_perm("all",0),TOP)
+        self.but_user=But(self.rframe,"Пользователи",lambda:scene_user(),TOP)
+        self.but_run_server=But(self.rframe,"Запустить сервер",lambda:self.serv.Start(),TOP)
+        self.but_stop_server=But(self.rframe,"Остановить сервер",lambda:self.serv.Stop(),TOP)
+        self.but_start_web=But(self.rframe,"Запустить web",lambda:self.RunServer(),TOP)
         self.form.root.mainloop()
         
     def RunServer(self):

@@ -6,11 +6,12 @@ from datetime import datetime
 from threading import Thread
 from queue import Empty, Queue
 import time
+import TextWrapper
 
 pathDB='web_interface/Logs.db'
 
 class Device:
-    def __init__(self,id_device,per):
+    def __init__(self,id_device,per,text):
         con = sl.connect(pathDB)
         with con:
             cursor=con.cursor()
@@ -43,6 +44,7 @@ class Device:
         self.command=""
         self.signal_write=False
         self.signal_wu=""
+        self.text=text
         
     def Start(self):
         self.ex_stop=False
@@ -58,7 +60,7 @@ class Device:
             response = self.client.read_holding_registers(address=512,count=64,slave=self.add_pr200)
             return response
         except ModbusException as exc:
-            print(str(self.name_user)+": connect timeout")
+            print(str(self.name_user)+": connect timeout", file=TextWrapper.TextWrapper(self.text))
             return exc
     
     def WriteSettings30(self):
@@ -73,7 +75,7 @@ class Device:
                 try:
                     self.dict_u[s]=self.dict_resp[s]
                 except:
-                    print(str(self.name_user)+": unknown setting")
+                    print(str(self.name_user)+": unknown setting", file=TextWrapper.TextWrapper(self.text))
                     self.signal_wu="ERROR UNKNOWN PARAM"
                     break
         if self.signal_wu=="PROCESSING":
@@ -85,7 +87,7 @@ class Device:
                 self.signal_wu="COMPLETE"
                 return responce
             except ModbusException as exc:
-                print(str(self.name_user)+": write error")
+                print(str(self.name_user)+": write error", file=TextWrapper.TextWrapper(self.text))
                 self.signal_wu="ERROR TIMEOUT"
                 return exc
     
@@ -153,7 +155,7 @@ class Device:
             t=time.time()
             rr=self.ReadData64()
             self.dt_local=datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-            print(self.dt_local+" "+str(self.name_user)+": "+str(rr))
+            print(self.dt_local+" "+str(self.name_user)+": "+str(rr), file=TextWrapper.TextWrapper(self.text))
             if not rr.isError():  
                 dr=self.CheckVersion(rr)
                 self.WriteTimeLog(dr)

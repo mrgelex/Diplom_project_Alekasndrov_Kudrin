@@ -3,13 +3,15 @@ import socket
 import sqlite3 as sl
 import device
 from threading import Thread
+import TextWrapper
 #from queue import Empty, Queue
 
 pathDB='web_interface/Logs.db'
 
 class Server:
-    def __init__(self):
+    def __init__(self,text):
         self.enable=True
+        self.text=text
         
     def Start(self):
         con = sl.connect(pathDB)
@@ -19,8 +21,8 @@ class Server:
             self.device_list=cursor.fetchall()
         self.dev={}
         for s in self.device_list:
-            print("Start id="+str(s[0]))
-            self.dev[s[0]]=device.Device(s[0],2)
+            print("Start device id="+str(s[0]), file=TextWrapper.TextWrapper(self.text))
+            self.dev[s[0]]=device.Device(s[0],2,self.text)
             self.dev[s[0]].Start()
         self.enable=True
         th=Thread(target=self.Thread)
