@@ -48,33 +48,35 @@ def showSetpoints(request, idDev):
                     if not dictdata.get(i):
                         dictdata[i]=setpoint.get(i)
                 setpoint=dictdata
-                mess=s.writeSP(idDev, setpoint)
-                SPd[str(idDev)]=setpoint #вида {id:{a:1, b:2...n:n}}
-                if 'SPque' in request.session:
-                    SPque=request.session['SPque']
-                    if SPque.get(str(idDev)):
-                        mess='Сейчас уставки менять нельзя'
-                    SPque.update(SPd)
-                else:
-                    SPque=SPd
-                request.session['SPque']=SPque
-                log.write(user.get('userid'), 1, idDev)
+                err, mess=s.writeSP(idDev, setpoint)
+                if err:
+                    SPd[str(idDev)]=setpoint #вида {id:{a:1, b:2...n:n}}
+                    if 'SPque' in request.session:
+                        SPque=request.session['SPque']
+                        if SPque.get(str(idDev)):
+                            mess='Сейчас уставки менять нельзя'
+                        SPque.update(SPd)
+                    else:
+                        SPque=SPd
+                    request.session['SPque']=SPque
+                    log.write(user.get('userid'), 1, idDev)
             else:
                 mess='Неправильная форма ввода уставок!'
+
         if 'SPque' in request.session:
             SPque=request.session['SPque']
             sp=SPque.get(str(idDev))
             if sp:
                 setpoint=sp
                 setP.disable()
-                mess='Подождите пока измененные уставки вступят в силу'
                 rel=True
                 but=False
-                res, rmess=s.result(idDev)
-                if res:
-                    del SPque[str(idDev)]
-                    but=True
-                    mess=rmess
+                if not request.method=='POST':
+                    res, rmess=s.result(idDev)
+                    if res:
+                        del SPque[str(idDev)]
+                        but=True
+                        mess=rmess
 
         setP.initial=setpoint
         if rel:
