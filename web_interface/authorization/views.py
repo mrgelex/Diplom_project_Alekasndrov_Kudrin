@@ -24,7 +24,7 @@ def showLogin(request):
                 user={'userid':userid, 'name':name, 'clname':clname, 'clrule':clrule}
                 request.session['user']=user
                 print('пользователь сохранен')
-                log.write(userid, 1)
+                # log.write(userid, 1)
                 return redirect('devices')
             else:
                 text='Неправильный логин или пароль!'
@@ -36,6 +36,6 @@ def showLogin(request):
 def logout(request):
     session=request.session
     user=session['user']
-    log.write(user.get('userid'), 2)
+    # log.write(user.get('userid'), 2)
     session.flush()
     return redirect('login')

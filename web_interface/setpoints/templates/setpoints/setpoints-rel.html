@@ -1,16 +1,18 @@
 {% extends 'devices/basic-reload.html' %}
-{% block title %}
-{{'Авторизация'}}
+{% block title %} 
+{{'Уставки'}} 
 {% endblock %}
 {% block body %}
-<h2>Вход в систему</h2>
+<h2>Уставки</h2>
 <form method="post">
     {% csrf_token %}
-    {% for item in form %}
-        {{item.label_tag}}
-        {{item}}
+    {% for item in setP %}
+       <p>{{item.label_tag}}</p>
+      <p>{{item}}</p>
     {% endfor %}
-    <input type="submit" value="Применить" />
+    {%if but %}
+        <input type="submit" value="Применить" />
+    {%endif%}
 </form>
-<span> {{error}} </span>
+<span> {{mess}} </span>
 {% endblock %}

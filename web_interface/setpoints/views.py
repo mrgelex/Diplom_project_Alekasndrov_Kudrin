@@ -40,50 +40,52 @@ def showSetpoints(request, idDev):
             if data.is_valid():
                 dictdata=data.cleaned_data
                 for i in dictdata:
-                    if i == 'EnUpECN':
-                        if dictdata.get(i):
-                            dictdata[i]='1'
-                        else:
-                            dictdata[i]='0'
-                    if not dictdata.get(i):
-                        dictdata[i]=setpoint.get(i)
+                    if i != 'EnUpECN':
+                        if not dictdata.get(i):
+                            dictdata[i]=setpoint.get(i)
                 setpoint=dictdata
+                print('для инициализации', dictdata)
+                print('для записи', dictdata)
                 err, mess=s.writeSP(idDev, setpoint)
-                if err:
+                if not err:
                     SPd[str(idDev)]=setpoint #вида {id:{a:1, b:2...n:n}}
                     if 'SPque' in request.session:
                         SPque=request.session['SPque']
                         if SPque.get(str(idDev)):
-                            mess='Сейчас уставки менять нельзя'
+                            mess='Сейчас уставки менять нельзя, дождитесь окончания записи'
                         SPque.update(SPd)
                     else:
                         SPque=SPd
                     request.session['SPque']=SPque
-                    log.write(user.get('userid'), 1, idDev)
+                    # log.write(user.get('userid'), 1, idDev)
+                    print('лог типа записался')
             else:
-                dictdata=data.cleaned_data
-                mess=dictdata.items()
-            #  mess='Неправильная форма ввода уставок!'
+                mess='Неправильная форма ввода уставок!'
 
         if 'SPque' in request.session:
             SPque=request.session['SPque']
-            sp=SPque.get(str(idDev))
-            if sp:
-                setpoint=sp
-                setP.disable()
-                rel=True
-                but=False
-                if not request.method=='POST':
-                    res, rmess=s.result(idDev)
-                    if res:
-                        del SPque[str(idDev)]
-                        but=True
+            if SPque:
+                sp=SPque.get(str(idDev))
+                if sp:
+                    print('sp from session', sp)
+                    setpoint=sp
+                    setP.disable()
+                    rel=True
+                    but=False
+                    if not request.method=='POST':
+                        res, rmess=s.result(idDev)
+                        if res:
+                            del SPque[str(idDev)]
+                            request.session['SPque']=SPque
+                            but=True
+                            rel=False
+                            setpoint=s.operData(idDev, False)
+                            setP=Setpoints()
                         mess=rmess
-
         setP.initial=setpoint
-        if rel:
-            return render(request, 'setpoints/setpoints-rel.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
-        else:
-            return render(request, 'setpoints/setpoints.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
+    if rel:
+        return render(request, 'setpoints/setpoints-rel.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
+    else:
+        return render(request, 'setpoints/setpoints.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
     
         

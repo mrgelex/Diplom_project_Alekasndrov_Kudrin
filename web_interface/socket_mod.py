@@ -3,7 +3,7 @@ import socket as s
 def result(id):
 
     sockObj=s.socket()
-    ip=s.gethostname()
+    ip='localhost'
     numP=9898
     sockObj.connect((ip, numP))
     mess='STATUS_WRITE;'+str(id)
@@ -34,7 +34,7 @@ def convertType(lVal):
         lVal[1]=int(lVal[1])
     elif lVal[0] in ['WorkSpeed', 'ManualSpeed', 'CollarSpeed']:
         lVal[1]=float(lVal[1])
-    elif lVal[0]=='TmWaitECN':
+    elif lVal[0]=='EnUpECN':
         if lVal[1]=='1':
             lVal[1]=True
         else:
@@ -44,7 +44,6 @@ def convertType(lVal):
 
 def operData(id, mod):
     sockObj=s.socket()
-    #ip=s.gethostname()
     ip='localhost'
     numP=9898
     sockObj.connect((ip, numP))
@@ -77,11 +76,16 @@ def operData(id, mod):
 
 def writeSP(id, sp):
     sockObj=s.socket()
-    ip=s.gethostname()
+    ip='localhost'
     numP=9898
     sockObj.connect((ip, numP))
     st=''
     for i in sp:
+        if i =='EnUpECN':
+            if sp.get(i):
+                sp[i]=1
+            else:
+                sp[i]=0
         st=st+i+'='+str(sp.get(i))+','
     st=st.rstrip(',')
     mess='WRITE_DEVICE_SETTING;'+str(id)+';'+st
