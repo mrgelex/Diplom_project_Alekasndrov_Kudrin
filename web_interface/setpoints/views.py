@@ -61,7 +61,9 @@ def showSetpoints(request, idDev):
                     request.session['SPque']=SPque
                     log.write(user.get('userid'), 1, idDev)
             else:
-                mess='Неправильная форма ввода уставок!'
+                dictdata=data.cleaned_data
+                mess=dictdata.items()
+            #  mess='Неправильная форма ввода уставок!'
 
         if 'SPque' in request.session:
             SPque=request.session['SPque']
