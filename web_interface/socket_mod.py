@@ -14,12 +14,15 @@ def result(id):
     mess
     if 'STATUS_WRITE' in answer:
         answer=answer[2].split(',')
-        if 'OK' in answer:
+        if 'COMPLETE' in answer:
             return True, 'Успешно!'
-        elif 'ERROR' in answer:
-            return True, 'Возникла ошибка при записи! Пожалуйста, повторите попытку '
-        else:
-            return False
+        elif 'ERROR_UNKNOWN_PARAM' in answer:
+            return True, 'Возникла ошибка при записи! Пожалуйста, Пожалуйста, убедитесь в правильности введенных уставок'
+        elif 'ERROR_TIMEOUT' in answer:
+            return True, 'Возникла ошибка при передаче! Пожалуйста, повторите попытку'
+        elif 'PROCESSING' in answer:
+            return False, 'Подождите пока измененные уставки вступят в силу'
+
         
 def convertType(lVal):
     if lVal[1]=='NULL':
@@ -86,7 +89,11 @@ def writeSP(id, sp):
     data=sockObj.recv(2048)
     answer=data.decode()
     answer=answer.split(';')
-    if 'WRITE_DEVICE_SETTING' in answer:
-        return 'Подождите пока измененные уставки вступят в силу'
-    else:
-        return 'Возникла ошибка при передаче! Пожалуйста, повторите попытку'
+    if 'PROCESSING' in answer:
+        return False, 'Подождите пока измененные уставки вступят в силу'
+    elif 'ERROR_TIMEOUT' in answer:
+        return True, 'Возникла ошибка при передаче! Пожалуйста, повторите попытку'
+    elif 'ERROR_UNKNOWN_PARAM' in answer:
+        return True, 'Возникла ошибка при проверке данных! Пожалуйста, убедитесь в правильности введенных уставок'
+    elif 'ERROR ID DEVICE' in answer:
+        return True, 'Устройство не найдено!'
