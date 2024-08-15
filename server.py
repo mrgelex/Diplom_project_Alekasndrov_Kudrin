@@ -51,9 +51,21 @@ class Server:
                     snd="READ_DATA;"+self.cmd[1]+";NULL"
                     conn.send(snd.encode())
             elif self.cmd[0]=="WRITE_DEVICE_SETTING":
-                pass
+                try:
+                    self.dev[int(self.cmd[1])].WriteData(self.cmd[2])
+                    snd="WRITE_DEVICE_SETTING;"+self.cmd[1]+";PROCESSING"
+                    conn.send(snd.encode())
+                except:
+                    snd="WRITE_DEVICE_SETTING;"+self.cmd[1]+";ERROR ID DEVICE"
+                    conn.send(snd.encode())
             elif self.cmd[0]=="STATUS_WRITE":
-                pass
+                try:
+                    resp=self.dev[int(self.cmd[1])].GetStatusWrite(self.cmd[2])
+                    snd="STATUS_WRITE;"+self.cmd[1]+";"+resp
+                    conn.send(snd.encode())
+                except:
+                    snd="STATUS_WRITE;"+self.cmd[1]+";ERROR ID DEVICE"
+                    conn.send(snd.encode())
             else:
                 snd="UNKNOWN_COMMAND: "+data
                 conn.send(snd.encode())

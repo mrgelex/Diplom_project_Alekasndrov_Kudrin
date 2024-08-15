@@ -2,7 +2,7 @@ import socket
 
 sock=socket.socket()
 sock.connect(('localhost',9898))
-sock.send(b'READ_DATA;1;DT1,DT2,DT3')
+sock.send(b'WRITE_DEVICE_SETTING;1;WorkDepth=200')
 data=sock.recv(2048)
 sock.close
 print(data)

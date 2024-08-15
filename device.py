@@ -74,16 +74,20 @@ class Device:
                     self.dict_u[s]=self.dict_resp[s]
                 except:
                     print(str(self.name_user)+": unknown setting")
-                    self.signal_wu="write error"
+                    self.signal_wu="ERROR UNKNOWN PARAM"
                     break
-        if self.signal_wu=="":
+        if self.signal_wu=="PROCESSING":
             regs=[]
-        try:
-            responce=self.client.write_registers(address=528,values=regs,slave=self.add_pr200)
-            return responce
-        except ModbusException as exc:
-            print(str(self.name_user)+": write error")
-            return exc
+            for s in self.dict_u:
+                regs.append(self.dict_u[s])
+            try:
+                responce=self.client.write_registers(address=528,values=regs,slave=self.add_pr200)
+                self.signal_wu="COMPLETE"
+                return responce
+            except ModbusException as exc:
+                print(str(self.name_user)+": write error")
+                self.signal_wu="ERROR TIMEOUT"
+                return exc
     
     def CheckVersion(self,resp):
         v9012=["DT1","DT2","DT3","Status_v9","Depth","Power","AI2","StringStatus","Status_v5","TimeBeforeStart","Depth2","Speed","Power2","NSucYes","NSucTod","NSucTot",
@@ -175,6 +179,11 @@ class Device:
             a=s.split("=")
             self.dict_write[a[0]]=int(a[1])
         self.signal_write=True
+        self.signal_wu="PROCESSING"
+        
+    def GetStatusWrite(self):
+        return self.signal_wu
+        
             
         
 #D=Device("1")     
