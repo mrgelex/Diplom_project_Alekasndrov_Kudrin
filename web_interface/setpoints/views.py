@@ -71,6 +71,7 @@ def showSetpoints(request, idDev):
                 sp=SPque.get(str(idDev))
                 if sp:
                     print('sp from session', sp)
+                    sp['EnUpECN']=bool(sp.get('EnUpECN'))
                     setpoint=sp
                     setP.disable()
                     rel=True
