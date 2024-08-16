@@ -3,6 +3,7 @@ from .forms import *
 from devices.models import Devicetab
 import write_log as log
 import socket_mod as s
+import math as m
 
 viewSetpAcc=30
 changSetAcc=40
@@ -43,6 +44,8 @@ def showSetpoints(request, idDev):
                     if i != 'EnUpECN':
                         if not dictdata.get(i):
                             dictdata[i]=setpoint.get(i)
+                    if i in ['WorkSpeed', 'ManualSpeed', 'CollarSpeed']:
+                        dictdata[i]=m.trunc(dictdata.get(i)*10)
                 setpoint=dictdata
                 print('для инициализации', dictdata)
                 print('для записи', dictdata)

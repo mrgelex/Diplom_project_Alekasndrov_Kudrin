@@ -33,7 +33,7 @@ def convertType(lVal):
                    'TmWaitECN', 'CollarDepth']:
         lVal[1]=int(lVal[1])
     elif lVal[0] in ['WorkSpeed', 'ManualSpeed', 'CollarSpeed']:
-        lVal[1]=float(lVal[1])
+        lVal[1]=float(int(lVal[1])/10)
     elif lVal[0]=='EnUpECN':
         if lVal[1]=='1':
             lVal[1]=True
