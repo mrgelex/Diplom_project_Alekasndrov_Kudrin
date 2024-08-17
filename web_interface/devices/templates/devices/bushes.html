@@ -17,8 +17,11 @@
             <p>{{device.Speed}}</p>
             <p> {{'Время до старта'}} </p>
             <p>{{device.TimeBeforeStart}}</p>
-            {% if not bushObj.rule < 30 %}
+            {% if not bushObj.rule < lvlbutSP %}
                 <a href="{% url 'setpoints' device.device_id %}"> Уставки </a>
+            {% endif %}
+            {% if not bushObj.rule < lvlbutChart %}
+                <a href="{% url 'showcharts' device.device_id %}"> График </a>
             {% endif %}
         {% endfor %}
     </div>

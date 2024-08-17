@@ -1,7 +1,8 @@
 from django import forms
 
 class Setpoints(forms.Form):
-    Username2=forms.CharField(label='Имя:', required=False, min_length=1, max_length=8, strip=True)
+    Username1=forms.CharField(label='Имя:', required=False, min_length=1, max_length=10, strip=True)
+    Username2=forms.CharField(required=False, min_length=1, max_length=10, strip=True)
     NWires=forms.IntegerField(label='Количество проволоки, м:', required=False, min_value=0)
     WorkDepth=forms.IntegerField(label='Рабочая глубина, м:', required=False, min_value=0)
     WorkSpeed=forms.FloatField(label='Скорость движения, м/мин:', required=False, min_value=0)
@@ -20,26 +21,8 @@ class Setpoints(forms.Form):
     CollarDepth=forms.IntegerField(label='Глубина снижения скорости, м:', required=False, min_value=0)
 
     def disable(self):
-            for j in ['Username2', 'NWires', 'WorkDepth', 'WorkSpeed', 'TmClearDelta',
+            for j in ['Username1','Username2', 'NWires', 'WorkDepth', 'WorkSpeed', 'TmClearDelta',
                       'TmClearAbs', 'TmWaitWorkDepth', 'TmWaitLubr', 'ManualSpeed',
                       'LimPlugDown', 'TmWaitDatPro', 'DepthClearUst', 'TmClearUst',
                       'TmWaitECN', 'EnUpECN', 'CollarSpeed', 'CollarDepth']:
                 self.fields[j].disabled=True
-            # i.disabled=True
-        # self.Username2.disabled=True
-        # self.NWires.disabled=True
-        # self.WorkDepth.disabled=True
-        # self.WorkSpeed.disabled=True
-        # self.TmClearDelta.disabled=True
-        # self.TmClearAbs.disabled=True
-        # self.TmWaitWorkDepth.disabled=True
-        # self.TmWaitLubr.disabled=True
-        # self.ManualSpeed.disabled=True
-        # self.LimPlugDown.disabled=True
-        # self.TmWaitDatPro.disabled=True
-        # self.DepthClearUst.disabled=True
-        # self.TmClearUst.disabled=True
-        # self.TmWaitECN.disabled=True
-        # self.EnUpECN.disabled=True
-        # self.CollarSpeed.disabled=True
-        # self.CollarDepth.disabled=True

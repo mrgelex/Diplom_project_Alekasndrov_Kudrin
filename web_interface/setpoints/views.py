@@ -4,9 +4,10 @@ from devices.models import Devicetab
 import write_log as log
 import socket_mod as s
 import math as m
+import perm_for_web as p
 
-viewSetpAcc=30
-changSetAcc=40
+viewSetpAcc=p.viewSP
+changSetAcc=p.changSP
 
 def showSetpoints(request, idDev):
     rel=False

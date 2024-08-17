@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
 import socket_mod as s
+import perm_for_web as p
 
-webAcces=10
+webAcces=p.web
+lvlbutSP=p.viewSP
+lvlbutChart=p.shart
 
 class Bush:
     def __init__(self, folder_id, name, rule_id, deviceDicts=None):
@@ -170,4 +173,4 @@ def showBush(request, idFol):
 
     if not selectFold:
         return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
-    return render(request, 'devices/bushes.html', {'selectFold':selectFold,'user':user})
+    return render(request, 'devices/bushes.html', {'selectFold':selectFold,'user':user, 'lvlbutSP':lvlbutSP, 'lvlbutChart':lvlbutChart})

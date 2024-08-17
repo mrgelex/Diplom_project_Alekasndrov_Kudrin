@@ -25,9 +25,6 @@ def result(id):
 
         
 def convertType(lVal):
-    if lVal[1]=='NULL':
-        lVal[1]=None
-        return lVal
     if lVal[0] in ['NWires', 'WorkDepth', 'TmClearDelta', 'TmClearAbs', 'TmWaitWorkDepth',
                    'TmWaitLubr', 'LimPlugDown', 'TmWaitDatPro', 'DepthClearUst', 'TmClearUst',
                    'TmWaitECN', 'CollarDepth']:
@@ -50,7 +47,7 @@ def operData(id, mod):
     if mod:
         valStr='Status_v9,Depth,Power,Speed,TimeBeforeStart,NSucYes,NSucTod,NSucTot'
     else:
-        valStr='Username2,NWires,WorkDepth,WorkSpeed,TmClearDelta,TmClearAbs,TmWaitWorkDepth,TmWaitLubr,ManualSpeed,LimPlugDown,TmWaitDatPro,DepthClearUst,TmClearUst,TmWaitECN,EnUpECN,CollarSpeed,CollarDepth'
+        valStr='Username1,Username2,NWires,WorkDepth,WorkSpeed,TmClearDelta,TmClearAbs,TmWaitWorkDepth,TmWaitLubr,ManualSpeed,LimPlugDown,TmWaitDatPro,DepthClearUst,TmClearUst,TmWaitECN,EnUpECN,CollarSpeed,CollarDepth'
     mess='READ_DATA;'+str(id)+';'+valStr
     sockObj.send(mess.encode())
     data=sockObj.recv(2048)
