@@ -260,9 +260,12 @@ class scene_device:
             self.ent_device_description=Ent(self.right_frame,"Описание",self.device_description,TOP,justify="center")
             self.ent_device_IP=Ent(self.right_frame,"IP",self.device_IP,TOP,justify="center")
             self.ent_device_port=Ent(self.right_frame,"Порт",self.device_port,TOP,justify="center")
-            self.mb_list=("true","false")
+            self.mb_list=("нет","да")
             self.ent_device_modbus_over_tcp=Cmbox(self.right_frame,"Modbus over TCP",self.mb_list,TOP)
-            self.ent_device_modbus_over_tcp.set(self.device_modbus_over_tcp)
+            if self.device_modbus_over_tcp==0:
+                self.ent_device_modbus_over_tcp.set(self.mb_list[0])
+            else:
+                self.ent_device_modbus_over_tcp.set(self.mb_list[1])
             self.ent_device_add_pr200=Ent(self.right_frame,"Адрес ПР200",self.device_add_pr200,TOP,justify="center")
             self.ent_device_add_tr16=Ent(self.right_frame,"Адрес ТР16",self.device_add_tr16,TOP,justify="center")
             self.ent_device_add_inv=Ent(self.right_frame,"Адрес ПЧВ",self.device_add_inv,TOP,justify="center")
@@ -272,9 +275,12 @@ class scene_device:
             self.GMT_list=("+13","+12","+11","+10","+9","+8","+7","+6","+5","+4","+3","+2","+1","0","-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12")
             self.ent_device_GMT=Cmbox(self.right_frame,"Часовой пояс",self.GMT_list,TOP)
             self.ent_device_GMT.set(self.device_GMT)
-            self.en_list=("true","false")
+            self.en_list=("нет","да")
             self.ent_device_en=Cmbox(self.right_frame,"Enable",self.en_list,TOP)
-            self.ent_device_en.set(self.device_en)
+            if self.device_en==0:
+                self.ent_device_en.set(self.en_list[0])
+            else:
+                self.ent_device_en.set(self.en_list[1])
             self.but_frame1=Frame(self.right_frame)
             self.but_frame1.pack(side=TOP, fill=X, padx=8, pady=10)
             self.but_save=But(self.but_frame1,"Сохранить",lambda:self.UpdateDevice_form(),LEFT)
@@ -371,13 +377,19 @@ class scene_device:
         self.device_description=self.ent_device_description.get()
         self.device_IP=self.ent_device_IP.get()
         self.device_port=self.ent_device_port.get()
-        self.device_modbus_over_tcp=self.ent_device_modbus_over_tcp.get()
+        if self.ent_device_modbus_over_tcp.get()==self.mb_list[0]:
+            self.device_modbus_over_tcp="0"
+        else:
+            self.device_modbus_over_tcp="1"
         self.device_add_pr200=self.ent_device_add_pr200.get()
         self.device_add_tr16=self.ent_device_add_tr16.get()
         self.device_add_inv=self.ent_device_add_inv.get()
         self.device_type_inv=self.ent_device_type_inv.get()
         self.device_GMT=self.ent_device_GMT.get()
-        self.device_en=self.ent_device_en.get()
+        if self.ent_device_en.get()==self.en_list[0]:
+            self.device_en="0"
+        else:
+            self.device_en="1"
         con = sl.connect(pathDB)
         with con:
             cursor=con.cursor()
@@ -600,9 +612,8 @@ class scene_device:
         self.new_device_description=Ent(self.form_new_device.root,"Описание","",TOP,justify="center")
         self.new_device_IP=Ent(self.form_new_device.root,"IP","127.0.0.1",TOP,justify="center")
         self.new_device_port=Ent(self.form_new_device.root,"Порт","",TOP,justify="center")
-        self.mb_list=("true","false")
         self.new_device_modbus_over_tcp=Cmbox(self.form_new_device.root,"Modbus over TCP",self.mb_list,TOP)
-        self.new_device_modbus_over_tcp.set(self.mb_list[0])
+        self.new_device_modbus_over_tcp.set(self.mb_list[1])
         self.new_device_add_pr200=Ent(self.form_new_device.root,"Адрес ПР200","10",TOP,justify="center")
         self.new_device_add_tr16=Ent(self.form_new_device.root,"Адрес ТР16","16",TOP,justify="center")
         self.new_device_add_inv=Ent(self.form_new_device.root,"Адрес ПЧВ","1",TOP,justify="center")
@@ -612,9 +623,8 @@ class scene_device:
         self.GMT_list=("+13","+12","+11","+10","+9","+8","+7","+6","+5","+4","+3","+2","+1","0","-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12")
         self.new_device_GMT=Cmbox(self.form_new_device.root,"Часовой пояс",self.GMT_list,TOP)
         self.new_device_GMT.set("+3")
-        self.en_list=("true","false")
         self.new_device_en=Cmbox(self.form_new_device.root,"Enable",self.en_list,TOP)
-        self.new_device_en.set("True")
+        self.new_device_en.set(self.en_list[1])
         self.but_frame_create_device=Frame(self.form_new_device.root)
         self.but_frame_create_device.pack(side=TOP, fill=X, padx=8, pady=10)
         self.but_save_new_folder=But(self.but_frame_create_device,"Сохранить",lambda:self.CreateDevice_DB(),LEFT)
@@ -626,14 +636,22 @@ class scene_device:
             cursor=con.cursor()
             cursor.execute("""SELECT folder_id FROM FOLDER WHERE name='"""+str(self.new_cmbx_device.get())+"""'""")
             answear=cursor.fetchall()
+            if self.new_device_modbus_over_tcp.get()==self.mb_list[0]:
+                self.device_modbus_over_tcp="0"
+            else:
+                self.device_modbus_over_tcp="1"
+            if self.new_device_en.get()==self.en_list[0]:
+                self.device_en="0"
+            else:
+                self.device_en="1"
             cursor.execute("""INSERT INTO DEVICE (folder_id,name_user,IMEI,description,IP,port,modbus_over_tcp,add_pr200,add_tr16,add_inv,type_inv,GMT,enable) VALUES 
                             ('"""+str(answear[0][0])+"""', '"""+str(self.new_device_name_user.get())+"""', 
                             '"""+str(self.new_device_IMEI.get())+"""', '"""+str(self.new_device_description.get())+"""', 
                             '"""+str(self.new_device_IP.get())+"""', '"""+str(self.new_device_port.get())+"""', 
-                            '"""+str(self.new_device_modbus_over_tcp.get())+"""', '"""+str(self.new_device_add_pr200.get())+"""', 
+                            '"""+str(self.device_modbus_over_tcp)+"""', '"""+str(self.new_device_add_pr200.get())+"""', 
                             '"""+str(self.new_device_add_tr16.get())+"""', '"""+str(self.new_device_add_inv.get())+"""', 
                             '"""+str(self.new_device_type_inv.get())+"""', '"""+str(self.new_device_GMT.get())+"""', 
-                            '"""+str(self.new_device_en.get())+"""')""")
+                            '"""+str(self.device_en)+"""')""")
             con.commit()
         self.Tree_Refresh()
         self.form_new_device.root.destroy()
