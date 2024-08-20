@@ -34,6 +34,7 @@ class Devicetab(models.Model):
     add_inv=models.IntegerField(max_length=10)
     type_inv=models.CharField(max_length=50)
     GMT=models.CharField(max_length=50)
+    enable=models.BooleanField()
 
     class Meta:
         managed=False

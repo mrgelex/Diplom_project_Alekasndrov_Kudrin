@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 ('add_inv', models.IntegerField(max_length=10)),
                 ('type_inv', models.CharField(max_length=50)),
                 ('GMT', models.CharField(max_length=50)),
+                ('enable', models.BooleanField())
             ],
             options={
                 'db_table': 'DEVICE',

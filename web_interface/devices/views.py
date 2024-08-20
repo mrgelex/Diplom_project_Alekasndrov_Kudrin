@@ -127,50 +127,56 @@ def showBush(request, idFol):
             bushObj=Bush(i.get('folder_id'), i.get('name'), i.get('rule_id'))
             bushObj.access(user.get('clrule'))
             if bushObj.rule >= webAcces:
-                deviceSet=Devicetab.objects.filter(folder_id=i.get('folder_id'))# .filter(folder_id=i.get('folder_id'), enable=True)
-                dDev=deviceSet.values('device_id', 'name_user','description')
-                for f in dDev:
-                    f.update(s.operData(f.get('device_id'), True))
-                # print(dDev)
-                bushObj.deviceDicts=dDev
-                devlist=list(deviceSet.values_list('device_id', flat=True))
-                dictDev={}
+                deviceSet=Devicetab.objects.filter(folder_id=i.get('folder_id'), enable=True)
+                if deviceSet:
+                    print('yes')
+                    dDev=deviceSet.values('device_id', 'name_user','description')
+                    for f in dDev:
+                        f.update(s.operData(f.get('device_id'), True))
+                    # print(dDev)
+                    bushObj.deviceDicts=dDev
+                    devlist=list(deviceSet.values_list('device_id', flat=True))
+                    dictDev={}
 
-                if 'validF' in request.session:
-                    # print('данные в сессии есть')
-                    validF=request.session['validF']
-                    if not isinstance(validF, list):
-                         validF=[validF]
-                        #  print('преобразован в список', validF)
-                    if not i.get('folder_id') in validF:
-                        # print('каталога в сессии нет')
-                        # print('исследуемый каталог',i.get('folder_id'))
-                        validF.append(i.get('folder_id'))
-                        request.session['validF']=validF
-                        # print('список до записи', validF)
-                        # print('каталог записан', request.session['validF'])
-                        if 'accesD' in request.session:
-                            accesD=request.session['accesD']
-                            # print('yes', accesD)
-                        else:
-                            accesD={}
-                            # print('no', accesD)
+                    if 'validF' in request.session:
+                        # print('данные в сессии есть')
+                        validF=request.session['validF']
+                        if not isinstance(validF, list):
+                            validF=[validF]
+                            #  print('преобразован в список', validF)
+                        if not i.get('folder_id') in validF:
+                            # print('каталога в сессии нет')
+                            # print('исследуемый каталог',i.get('folder_id'))
+                            validF.append(i.get('folder_id'))
+                            request.session['validF']=validF
+                            # print('список до записи', validF)
+                            # print('каталог записан', request.session['validF'])
+                            if 'accesD' in request.session:
+                                accesD=request.session['accesD']
+                                # print('yes', accesD)
+                            else:
+                                accesD={}
+                                # print('no', accesD)
+                            for i in devlist:
+                                dictDev[str(i)]=bushObj.rule
+                            accesD.update(dictDev)
+                            # print('полученный словарь устройств', accesD)
+                            request.session['accesD']=accesD
+                        pass
+                    else:
+                        request.session['validF']=i.get('folder_id')
+
+                        # print('каталог не проверен и вообще нет данных в сессии', 'первый записан', request.session['validF'])
                         for i in devlist:
                             dictDev[str(i)]=bushObj.rule
-                        accesD.update(dictDev)
-                        # print('полученный словарь устройств', accesD)
-                        request.session['accesD']=accesD
-                    pass
+                        request.session['accesD']=dictDev
+                        # print('словарь записан', request.session['accesD'])
+                    selectFold.append(bushObj)
                 else:
-                    request.session['validF']=i.get('folder_id')
-
-                    # print('каталог не проверен и вообще нет данных в сессии', 'первый записан', request.session['validF'])
-                    for i in devlist:
-                        dictDev[str(i)]=bushObj.rule
-                    request.session['accesD']=dictDev
-                    # print('словарь записан', request.session['accesD'])
-                selectFold.append(bushObj)
+                    text='Отображение устройств отключено'
+            else:
+                text='Извините, Ваш уровень доступа ограничен'
 
     if not selectFold:
-        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
+        return render(request, 'devices/warning.html', {'text':text})
     return render(request, 'devices/bushes.html', {'selectFold':selectFold,'user':user, 'lvlbutSP':lvlbutSP, 'lvlbutChart':lvlbutChart})

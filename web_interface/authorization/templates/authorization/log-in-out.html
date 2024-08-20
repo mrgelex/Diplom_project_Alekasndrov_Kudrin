@@ -3,14 +3,16 @@
 {{'Авторизация'}}
 {% endblock %}
 {% block body %}
-<h2>Вход в систему</h2>
-<form method="post">
-    {% csrf_token %}
-    {% for item in form %}
-        {{item.label_tag}}
-        {{item}}
-    {% endfor %}
-    <input type="submit" value="Применить" />
-</form>
-<span> {{error}} </span>
+<div class="autho-win">
+    <h2>Вход в систему</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for item in form %}
+            {{item.label_tag}}
+            {{item}}
+        {% endfor %}
+        <input type="submit" value="Применить" />
+    </form>
+    <span> {{error}} </span>
+</div>
 {% endblock %}
