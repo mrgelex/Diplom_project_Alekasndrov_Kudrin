@@ -5,10 +5,14 @@
     <meta http-equiv="refresh" content="60">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'authorization/img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'authorization/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'authorization/css/styweb.css'%}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
     {% block body %}
     {% endblock %}
+    <script src="{% static 'authorization/js/bootstrap.min.js' %}"></script>
 </body>
 </html>
