@@ -39,10 +39,10 @@ class Ent:
         self.entry.config(state="normal")
         
 class But:
-    def __init__(self, form, txt, com, packside):
+    def __init__(self, form, txt, com, packside, padx=0, pady=0):
         self.but=Button(form, text=txt)
         self.but.config(command=com)
-        self.but.pack(side=packside)
+        self.but.pack(side=packside, padx=padx, pady=pady)
         
 class Box:
     def __init__(self, form, h, w, data):
@@ -79,19 +79,19 @@ class main_window:
         self.lframe=Frame(self.form.root)
         self.lframe.pack(side=LEFT)
         self.rframe=Frame(self.form.root)
-        self.rframe.pack(side=RIGHT)
+        self.rframe.pack(side=LEFT, padx=10)
         self.text=Text(self.lframe, wrap="word")
         self.text.pack(side=LEFT)
         self.text_scrl=Scrollbar(self.lframe, command=self.text.yview)
         self.text_scrl.pack(side=LEFT, fill=Y)
         self.text.config(yscrollcommand=self.text_scrl.set) 
         self.serv=server.Server(self.text)
-        self.but_device=But(self.rframe,"Устройства",lambda:scene_device(),TOP)
-        self.but_perm=But(self.rframe,"Права доступа",lambda:scene_perm("all",0),TOP)
-        self.but_user=But(self.rframe,"Пользователи",lambda:scene_user(),TOP)
-        self.but_run_server=But(self.rframe,"Запустить сервер",lambda:self.serv.Start(),TOP)
-        self.but_stop_server=But(self.rframe,"Остановить сервер",lambda:self.serv.Stop(),TOP)
-        self.but_start_web=But(self.rframe,"Запустить web",lambda:self.RunServer(),TOP)
+        self.but_device=But(self.rframe,"Устройства",lambda:scene_device(),TOP, pady=15)
+        self.but_perm=But(self.rframe,"Права доступа",lambda:scene_perm("all",0),TOP, pady=15)
+        self.but_user=But(self.rframe,"Пользователи",lambda:scene_user(),TOP, pady=15)
+        self.but_run_server=But(self.rframe,"Запустить сервер",lambda:self.serv.Start(),TOP, pady=15)
+        self.but_stop_server=But(self.rframe,"Остановить сервер",lambda:self.serv.Stop(),TOP, pady=15)
+        self.but_start_web=But(self.rframe,"Запустить web",lambda:self.RunServer(),TOP, pady=15)
         self.form.root.mainloop()
         
     def RunServer(self):
@@ -120,10 +120,10 @@ class scene_device:
         self.tree.bind('<<TreeviewSelect>>',self.Detect_click)
         self.left_frame_bot=Frame(self.left_frame)
         self.left_frame_bot.pack(side=BOTTOM)
-        self.but_new_client=But(self.left_frame_bot,"Новый клиент",lambda:self.CreateClient_form(),LEFT)
-        self.but_new_folder=But(self.left_frame_bot,"Новая группа",lambda:self.CreateFolder_form(),LEFT)
-        self.but_new_subfolder=But(self.left_frame_bot,"Новая подгруппа",lambda:self.CreateSubFolder_form(),LEFT)
-        self.but_new_device=But(self.left_frame_bot,"Новое устройство",lambda:self.CreateDevice_form(),LEFT)
+        self.but_new_client=But(self.left_frame_bot,"Новый клиент",lambda:self.CreateClient_form(),LEFT, padx=8)
+        self.but_new_folder=But(self.left_frame_bot,"Новая группа",lambda:self.CreateFolder_form(),LEFT, padx=8)
+        self.but_new_subfolder=But(self.left_frame_bot,"Новая подгруппа",lambda:self.CreateSubFolder_form(),LEFT, padx=8)
+        self.but_new_device=But(self.left_frame_bot,"Новое устройство",lambda:self.CreateDevice_form(),LEFT, padx=8)
         self.form_device.root.mainloop()
     
     def Tree_Refresh(self):
@@ -681,11 +681,11 @@ class scene_perm:
         self.table_perm.config(yscrollcommand=self.scrl_perm.set) 
         self.table_perm.bind('<<TreeviewSelect>>',self.Detect_click)
         self.Refresh_table(sort,id)
-        self.but_show_all=But(self.lframe_perm_bot,"Показать всё",lambda:self.Show_all(),LEFT)
-        self.but_show_client=But(self.lframe_perm_bot,"Показать клиента",lambda:self.Show_client(),LEFT)
-        self.but_show_folder=But(self.lframe_perm_bot,"Показать папку",lambda:self.Show_folder(),LEFT)
-        self.but_show_user=But(self.lframe_perm_bot,"Показать пользователя",lambda:self.Show_user(),LEFT)
-        self.but_new_perm=But(self.lframe_perm_bot,"Создать разрешение",lambda:self.CreatePerm_form(),LEFT)
+        self.but_show_all=But(self.lframe_perm_bot,"Показать всё",lambda:self.Show_all(),LEFT, padx=10)
+        self.but_show_client=But(self.lframe_perm_bot,"Показать клиента",lambda:self.Show_client(),LEFT, padx=10)
+        self.but_show_folder=But(self.lframe_perm_bot,"Показать папку",lambda:self.Show_folder(),LEFT, padx=10)
+        self.but_show_user=But(self.lframe_perm_bot,"Показать пользователя",lambda:self.Show_user(),LEFT, padx=10)
+        self.but_new_perm=But(self.lframe_perm_bot,"Создать разрешение",lambda:self.CreatePerm_form(),LEFT, padx=10)
     
     def Refresh_table(self,sort,id):
         self.table_perm.delete(*self.table_perm.get_children())
