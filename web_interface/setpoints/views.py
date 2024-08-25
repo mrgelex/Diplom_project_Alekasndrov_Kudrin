@@ -10,6 +10,15 @@ viewSetpAcc=p.viewSP
 changSetAcc=p.changSP
 
 def showSetpoints(request, idDev):
+    def correct(data):
+        dictdata=data.cleaned_data
+        for i in dictdata:
+            if i != 'EnUpECN':
+                if not dictdata.get(i):
+                    dictdata[i]=setpoint.get(i)
+            if i in ['WorkSpeed', 'ManualSpeed', 'CollarSpeed']:
+                dictdata[i]=m.trunc(dictdata.get(i)*10)
+        return dictdata
     rel=False
     if not 'user' in request.session:
         return redirect('login')
@@ -29,7 +38,6 @@ def showSetpoints(request, idDev):
     setpoint=s.operData(idDev, False)
     if not setpoint:
         mess='Нет связи!'
-    SPd={}
     setP=Setpoints()
     if accesLvl < changSetAcc:
         if request.method=='POST':
@@ -38,36 +46,28 @@ def showSetpoints(request, idDev):
         setP.initial=setpoint
         setP.disable()
     else:
+        err=False
         but=True
         if request.method=='POST':
             data=Setpoints(request.POST)
             if data.is_valid():
-                dictdata=data.cleaned_data
-                for i in dictdata:
-                    if i != 'EnUpECN':
-                        if not dictdata.get(i):
-                            dictdata[i]=setpoint.get(i)
-                    if i in ['WorkSpeed', 'ManualSpeed', 'CollarSpeed']:
-                        dictdata[i]=m.trunc(dictdata.get(i)*10)
-                setpoint=dictdata
-                print('для инициализации', dictdata)
-                print('для записи', dictdata)
-                err, mess=s.writeSP(idDev, setpoint)
-                if not err:
-                    SPd[str(idDev)]=setpoint #вида {id:{a:1, b:2...n:n}}
-                    if 'SPque' in request.session:
-                        SPque=request.session['SPque']
-                        if SPque.get(str(idDev)):
-                            mess='Сейчас уставки менять нельзя, дождитесь окончания записи'
+                if 'SPque' in request.session:
+                    SPque=request.session['SPque']
+                else:
+                    SPque={}
+                if not SPque.get(str(idDev)):
+                    dictdata=correct(data)
+                    err, mess=s.writeSP(idDev, dictdata)
+                    
+                    if not err:
+                        SPd={}
+                        SPd[str(idDev)]=dictdata #вида {id:{a:1, b:2...n:n}}
                         SPque.update(SPd)
-                    else:
-                        SPque=SPd
-                    request.session['SPque']=SPque
-                    # log.write(user.get('userid'), 1, idDev)
-                    print('лог типа записался')
+                        request.session['SPque']=SPque
+                        # log.write(user.get('userid'), 1, idDev)
+
             else:
                 mess='Неправильная форма ввода уставок!'
-
         if 'SPque' in request.session:
             SPque=request.session['SPque']
             if SPque:
@@ -79,16 +79,15 @@ def showSetpoints(request, idDev):
                     setP.disable()
                     rel=True
                     but=False
-                    if not request.method=='POST':
-                        res, rmess=s.result(idDev)
-                        if res:
-                            del SPque[str(idDev)]
-                            request.session['SPque']=SPque
-                            but=True
-                            rel=False
-                            setpoint=s.operData(idDev, False)
-                            setP=Setpoints()
-                        mess=rmess
+                    res, rmess=s.result(idDev)
+                    if res:
+                        del SPque[str(idDev)]
+                        request.session['SPque']=SPque
+                        but=True
+                        rel=False
+                        setpoint=s.operData(idDev, False)
+                        setP=Setpoints()
+                    mess=rmess
         setP.initial=setpoint
     if rel:
         return render(request, 'setpoints/setpoints-rel.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess, 'devData':devData})

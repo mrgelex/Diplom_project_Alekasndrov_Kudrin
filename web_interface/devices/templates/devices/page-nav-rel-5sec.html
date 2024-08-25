@@ -1,0 +1,10 @@
+{% extends 'devices/basic-reload-5sec.html' %}
+{% block nav %}
+<nav class="navbar fixed-top">
+    <div class="container">
+        <div class="user-data">{{user.clname}}</div>
+        <div class="user-data">{{user.name}}</div>
+        <div><a href="http://127.0.0.1:8000/authorization/logout" class="logout">Выйти из системы</a></div>
+    </div>
+</nav>
+{% endblock %}
