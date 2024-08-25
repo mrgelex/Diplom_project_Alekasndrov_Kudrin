@@ -1,14 +1,21 @@
-{% extends 'authorization/basic.html' %}
+{% extends 'authorization/page-nav.html' %}
+
+{% load static %}
+{% block style %}
+{% static 'devices/css/fold-list.css'%}
+{% endblock %}
+
 {% block title %} 
 {{'Объекты'}} 
 {% endblock %}
 {% block body %}
-<h2>Доступные объекты</h2>
+<h2>Объекты</h2>
+    <div class="foldlist-win">
+        {% for item in rootFoldata %}
+            <div class="foldlist-item">
+                <a href="{% url 'showbush' item.folder_id %}" class="bt"> {{item.name}} </a>
+            </div>
+        {% endfor %}
+    </div>
 
-{% for item in rootFoldata %}
-<div class="foldlist-item">
-    <a href="{% url 'showbush' item.folder_id %}"> {{item.name}} </a>
-</div>
-{% endfor %}
-<a href="http://127.0.0.1:8000/authorization/logout">Выйти из системы</a>
 {% endblock %}

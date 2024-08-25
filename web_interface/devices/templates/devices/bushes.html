@@ -1,30 +1,194 @@
-{% extends 'devices/basic-reload.html' %}
-{% block title %} {{'Группы устройств'}} {% endblock %}
-{% block body %}
-<h2>Доступные группы</h2>
+{% extends 'devices/page-nav-rel.html' %}
 
-{% for bushObj in selectFold %}
-    <div class="bushObj">
-        <h4> {{bushObj.name}} </h4>
-        {% for device in bushObj.deviceDicts %}
-            <p> {{device.name_user}} </p>
-            <p> {{device.description}} </p>
-            <p> {{'Глубина'}} </p>
-            <p> {{device.Depth}} </p>
-            <p> {{'Мощность'}} </p>
-            <p>{{device.Power}}</p>
-            <p> {{'Скорость'}} </p>
-            <p>{{device.Speed}}</p>
-            <p> {{'Время до старта'}} </p>
-            <p>{{device.TimeBeforeStart}}</p>
-            {% if not bushObj.rule < lvlbutSP %}
-                <a href="{% url 'setpoints' device.device_id %}"> Уставки </a>
-            {% endif %}
-            {% if not bushObj.rule < lvlbutChart %}
-                <a href="{% url 'showcharts' device.device_id %}"> График </a>
-            {% endif %}
-        {% endfor %}
+{% load static %}
+{% block style %}
+{% static 'devices/css/bushes.css'%}
+{% endblock %}
+{% block title %} {{'Группы'}} {% endblock %}
+{% block body %}
+<h2>Группы</h2>
+<div class="bushes-win">
+    {% for bushObj in selectFold %}
+        <div class="bushObj">
+            <h4> {{bushObj.name}} </h4>
+            {% for device in bushObj.deviceDicts %}
+            <div class="bdev">
+                <div class="device">
+                    <div class="name">{{device.name_user}} {{device.description}}</div>
+
+                    <div class="status">
+                        {% if device.Status_v9 == 0 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>лицензия не активная</div>
+                        {% elif device.Status_v9 == 1 %}
+                            <div><img src="{% static 'devices/img/1.svg' %}" width="100px" height="100px"></div>
+                            <div>инициализация</div>
+                        {% elif device.Status_v9 == 2 %}
+                            <div><img src="{% static 'devices/img/1.svg' %}" width="100px" height="100px"></div>
+                            <div>инициализация</div>
+                        {% elif device.Status_v9 == 3 %}
+                            <div><img src="{% static 'devices/img/2.svg' %}" width="100px" height="100px"></div>
+                            <div>чистка вниз</div>
+                        {% elif device.Status_v9 == 4 %}
+                            <div><img src="{% static 'devices/img/3.svg' %}" width="100px" height="100px"></div>
+                            <div>чистка вверх</div>
+                        {% elif device.Status_v9 == 5 %}
+                            <div><img src="{% static 'devices/img/4.svg' %}" width="100px" height="100px"></div>
+                            <div>ожидание старта</div>
+                        {% elif device.Status_v9 == 6 %}
+                            <div><img src="{% static 'devices/img/14.svg' %}" width="100px" height="100px"></div>
+                            <div>ожидание ЭЦН</div>
+                        {% elif device.Status_v9 == 7 %}
+                            <div><img src="{% static 'devices/img/50.svg' %}" width="100px" height="100px"></div>
+                            <div>провис проволоки</div>
+                        {% elif device.Status_v9 == 8 %}
+                            <div><img src="{% static 'devices/img/50.svg' %}" width="100px" height="100px"></div>
+                            <div>закус проволоки</div>
+                        {% elif device.Status_v9 == 9 %}
+                            <div><img src="{% static 'devices/img/2.svg' %}" width="100px" height="100px"></div>
+                            <div>чистка устья вниз</div>
+                        {% elif device.Status_v9 == 10 %}
+                            <div><img src="{% static 'devices/img/3.svg' %}" width="100px" height="100px"></div>
+                            <div>чистка устья вверх</div>
+                        {% elif device.Status_v9 == 11 %}
+                            <div><img src="{% static 'devices/img/50.svg' %}" width="100px" height="100px"></div>
+                            <div>отход от пробки, спуск вниз</div>
+                        {% elif device.Status_v9 == 12 %}
+                            <div><img src="{% static 'devices/img/50.svg' %}" width="100px" height="100px"></div>
+                            <div>отход от пробки, подъем вверх</div>
+                        {% elif device.Status_v9 == 13 %}
+                            <div><img src="{% static 'devices/img/5.svg' %}" width="100px" height="100px"></div>
+                            <div>подъем по ЭЦН</div>
+                        {% elif device.Status_v9 == 14 %}
+                            <div><img src="{% static 'devices/img/6.svg' %}" width="100px" height="100px"></div>
+                            <div>ждем команду 485</div>
+                        {% elif device.Status_v9 == 15 %}
+                            <div><img src="{% static 'devices/img/7.svg' %}" width="100px" height="100px"></div>
+                            <div>чистка вниз 485</div>
+                        {% elif device.Status_v9 == 16 %}
+                            <div><img src="{% static 'devices/img/8.svg' %}" width="100px" height="100px"></div>
+                            <div>чистка вверх 485</div>
+                        {% elif device.Status_v9 == 17 %}
+                            <div><img src="{% static 'devices/img/6.svg' %}" width="100px" height="100px"></div>
+                            <div>ждем старта 485</div>
+                        {% elif device.Status_v9 == 18 %}
+                            <div><img src="{% static 'devices/img/12.svg' %}" width="100px" height="100px"></div>
+                            <div>включен аварийный режим</div>
+                        {% elif device.Status_v9 == 19 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>нет лицензии</div>
+                        {% elif device.Status_v9 == 20 %}
+                            <div><img src="{% static 'devices/img/9.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной режим</div>
+                        {% elif device.Status_v9 == 21 %}
+                            <div><img src="{% static 'devices/img/10.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной вниз</div>
+                        {% elif device.Status_v9 == 22 %}
+                            <div><img src="{% static 'devices/img/11.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной вверх</div>
+                        {% elif device.Status_v9 == 23 %}
+                            <div><img src="{% static 'devices/img/9.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной катушка</div>
+                        {% elif device.Status_v9 == 24 %}
+                            <div><img src="{% static 'devices/img/9.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной перегруз</div>
+                        {% elif device.Status_v9 == 25 %}
+                            <div><img src="{% static 'devices/img/9.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной макс глубина</div>
+                        {% elif device.Status_v9 == 26 %}
+                            <div><img src="{% static 'devices/img/9.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной истекло время</div>
+                        {% elif device.Status_v9 == 27 %}
+                            <div><img src="{% static 'devices/img/9.svg' %}" width="100px" height="100px"></div>
+                            <div>ручной глубина 0</div>
+                        {% elif device.Status_v9 == 28 %}
+                            <div><img src="{% static 'devices/img/50.svg' %}" width="100px" height="100px"></div>
+                            <div>перевязка скребка</div>
+                        {% elif device.Status_v9 == 29 %}
+                            <div><img src="{% static 'devices/img/50.svg' %}" width="100px" height="100px"></div>
+                            <div>не исп</div>
+                        {% elif device.Status_v9 == 30 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>закус проволоки</div>
+                        {% elif device.Status_v9 == 31 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>обрыв датчика оборотов</div>
+                        {% elif device.Status_v9 == 32 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>кз датчика оборотов</div>
+                        {% elif device.Status_v9 == 33 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>обрыв датчика закуса</div>
+                        {% elif device.Status_v9 == 34 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>кз датчика закуса</div>
+                        {% elif device.Status_v9 == 35 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>обрыв датчика провиса</div>
+                        {% elif device.Status_v9 == 36 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>кз датчика провиса</div>
+                        {% elif device.Status_v9 == 37 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>неисправность катушки</div>
+                        {% elif device.Status_v9 == 38 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>неисправность ПЧВ</div>
+                        {% elif device.Status_v9 == 39 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>неисправность тумблера</div>
+                        {% elif device.Status_v9 == 40 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>нет вращения</div>
+                        {% elif device.Status_v9 == 41 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>лимит пробка вниз</div>
+                        {% elif device.Status_v9 == 42 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>лимит пробка вверх</div>
+                        {% elif device.Status_v9 == 43 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>обрыв проволоки</div>
+                        {% elif device.Status_v9 == 44 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}"width="100px" height="100px"></div>
+                            <div>заклинивание скребка</div>
+                        {% elif device.Status_v9 == 45 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>кз катушки</div>
+                        {% elif device.Status_v9 == 46 %}
+                            <div><img src="{% static 'devices/img/13.svg' %}" width="100px" height="100px"></div>
+                            <div>перегрузка вниз</div>
+                        {% elif device.Status_v9 == 47 %}
+                            <div><img src="{% static 'devices/img/5.svg' %}" width="100px" height="100px"></div>
+                            <div>подъем по датчику</div>
+                        {%endif%}
+                    </div>
+                    <div class="vals">
+
+                        <div class="setp">
+                            <div>Глубина: <b>{{device.Depth}}</b> м</div>
+                            <div>Мощность: <b>{{device.Power}}</b> %</div>
+                            <div>Скорость: <b>{{device.Speed}}</b> м/с</div>
+                            <div>Время до старта: <b>{{device.TimeBeforeStart}}</b> мин</div>
+                        </div>
+                        <div class="clean">
+                            <div>Кол-во чисток всего: <b>{{device.NSucTot}}</b></div>
+                            <div>Вчера: <b>{{device.NSucYes}}</b></div>
+                            <div>Сегодня: <b>{{device.NSucTod}}</b></div>
+                        </div>
+                    </div>
+                    <div class="bt-gr">
+                        {% if not bushObj.rule < lvlbutSP %}
+                            <div class="but-md"><a href="{% url 'setpoints' device.device_id %}" target="_blank"> Уставки </a></div>
+                        {% endif %}
+                        {% if not bushObj.rule < lvlbutChart %}
+                            <div class="but-md"><a href="{% url 'showcharts' device.device_id %}" target="_blank"> График </a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
     </div>
-{% endfor %}
-<a href="http://127.0.0.1:8000/authorization/logout">Выйти из системы</a>
 {% endblock %}

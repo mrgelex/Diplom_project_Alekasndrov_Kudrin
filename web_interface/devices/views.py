@@ -54,7 +54,7 @@ def allFold(request):
             return redirect(reverse('showbush', args=[idFol]))
     user=request.session['user']
     if user.get('clrule') < webAcces:
-        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
+        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен', 'user':user})
     allFold=Foldertab.objects.all()
     if not 'rootOne' or not 'rootMany' in request.session:
         # print('нет корневых')
@@ -119,7 +119,7 @@ def showBush(request, idFol):
         rootSession=[request.session['rootOne']]
     # print(rootSession)
     if not idFol in rootSession:
-        return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу'})
+        return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу<br/>Пожалуйста, используйте графический интерфейс для доступа к Вашим ресурсам', 'user':user})
     
     selectFold=[]
     for i in foldData:
@@ -133,7 +133,8 @@ def showBush(request, idFol):
                     dDev=deviceSet.values('device_id', 'name_user','description')
                     for f in dDev:
                         f.update(s.operData(f.get('device_id'), True))
-                    # print(dDev)
+                    print(dDev)
+                        
                     bushObj.deviceDicts=dDev
                     devlist=list(deviceSet.values_list('device_id', flat=True))
                     dictDev={}
@@ -178,5 +179,5 @@ def showBush(request, idFol):
                 text='Извините, Ваш уровень доступа ограничен'
 
     if not selectFold:
-        return render(request, 'devices/warning.html', {'text':text})
+        return render(request, 'devices/warning.html', {'text':text, 'user':user})
     return render(request, 'devices/bushes.html', {'selectFold':selectFold,'user':user, 'lvlbutSP':lvlbutSP, 'lvlbutChart':lvlbutChart})

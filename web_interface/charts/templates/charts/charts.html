@@ -1,16 +1,28 @@
-{% extends 'authorization/basic.html' %}
+{% extends 'authorization/page-nav.html' %}
+{% load static %}
+{% block style %}
+{% static 'charts/css/charts.css'%}
+{% endblock %}
+
 {% block title %}
-{{'Графики'}}
+{{'График'}}
 {% endblock %}
 {% block body %}
 <h2>График работы устройства</h2>
-<form method="get">
-    {% for i in datForm %}
-        {{i.label_tag}}
-        {{i}}
-    {% endfor %}
-    <input type="submit" value="Применить" /> 
-</form>
-{{chartScript|safe}}
+<div class="chart-win">
+    <div class="bt-gr">
+        <div class="but-md"><a href="JavaScript:window.close()">Закрыть</a></div>
+        <div>
+            <form method="get">
+                {% for i in datForm %}
+                    {{i.label_tag}}
+                    {{i}}
+                {% endfor %}
+                <input type="submit" value="Применить" /> 
+            </form>
+        </div>
+    </div>
+    {{chartScript|safe}}
+</div>
 
 {% endblock %}

@@ -67,9 +67,11 @@ def operData(id, mod):
             if not mod:
                 lVal=convertType(lVal)
             dVals[lVal[0]]=lVal[1]
+        if mod:
+            dVals['Speed']=int(dVals.get('Speed'))/10
+            dVals['Status_v9']=int(dVals.get('Status_v9'))
+
     return dVals
-    print(id)
-    return {'Status_v9': '2', 'Depth': '3', 'Power': '1', 'Speed': '5', 'TimeBeforeStart': '7', 'NSucYes': '1', 'NSucTod': '0', 'NSucTot': '8'}
 
 def writeSP(id, sp):
     sockObj=s.socket()

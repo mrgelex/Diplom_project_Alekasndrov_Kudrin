@@ -4,6 +4,7 @@ import plotly.io as plio
 from .forms import *
 from django.shortcuts import render, redirect
 from .models import *
+from devices.models import Devicetab
 import perm_for_web as p
 
 chartAcces=p.shart
@@ -15,7 +16,7 @@ def showCharts(request, idDev):
         return data
 
     def addtrace(abscissa, ordinate, group, name, legend, color, y=None):
-        chartWin.add_trace(plgo.Scatter(y=abscissa, x=ordinate, mode='lines', legendgroup=group, name=name, showlegend=legend, yaxis=y, marker=dict(color=color)))
+        chartWin.add_trace(plgo.Scatter(y=abscissa, x=ordinate, mode='lines', legendgroup=group, name=name, showlegend=legend, yaxis=y, marker=dict(color=color), textfont_size=20))
 
     if not 'user' in request.session:
         return redirect('login')
@@ -24,18 +25,15 @@ def showCharts(request, idDev):
         return redirect('devices')
     accesD=request.session['accesD']
     if not str(idDev) in accesD:
-        return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу'})
+        return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу<br/>Пожалуйста, используйте графический интерфейс для доступа к Вашим ресурсам', 'user':user})
     if accesD.get(str(idDev)) < chartAcces:
-        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
+        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен', 'user':user})
 
 
     first=request.GET.get('first')
     last=request.GET.get('last')
-    # config={'displayModeBar':True, 'displaylogo': False}
     plio.templates.default = 'plotly_white'
-    chartWin=plex.line()
-    # chartWin.show(config={'displayModeBar':True, 'displaylogo': False})
-
+    chartWin=plex.line(height=750)
     if first and last:
         datForm=TimeInterval(initial={'first':first, 'last':last})
         powerdata=datachar(first, last, 'power')
@@ -58,14 +56,14 @@ def showCharts(request, idDev):
         swichShowLeg=True
         for i in listSet:
             addtrace(i[1], i[0], 'Мощность', 'Мощность',  swichShowLeg, 'red')
-            addtrace(i[2], i[0], 'Глубина', 'Глубина',  swichShowLeg, 'blue', 'y2')
+            addtrace(i[2], i[0], 'Глубина', 'Глубина',  swichShowLeg, 'orange', 'y2')
             swichShowLeg=False
-
-        chartWin.update_layout(title='имя устройства', legend_orientation='h', yaxis=dict(title='Глубина, М'), yaxis2=dict(title='Мощность, %', overlaying='y', side='right'))
+        device=Devicetab.objects.get(device_id=idDev)
+        chartWin.update_layout(title=device.description, yaxis=dict(title='Глубина, М'), yaxis2=dict(title='Мощность, %', overlaying='y', side='right') ,title_font_size=20, legend_font_size=15)
         chartWin.update_yaxes(autorange='reversed')
     else:
         datForm=TimeInterval()
     chartScript=chartWin.to_html(full_html=False)
-    return render(request, 'charts/charts.html', {'chartScript':chartScript, 'datForm':datForm})
+    return render(request, 'charts/charts.html', {'chartScript':chartScript, 'datForm':datForm, 'user':user})
 
 

@@ -1,18 +1,38 @@
 {% extends 'authorization/basic.html' %}
+{% load static %}
+{% block style %}
+{% static 'authorization/css/login.css'%}
+{% endblock %}
 {% block title %}
 {{'Авторизация'}}
 {% endblock %}
 {% block body %}
+
 <div class="autho-win">
-    <h2>Вход в систему</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% for item in form %}
-            {{item.label_tag}}
-            {{item}}
-        {% endfor %}
-        <input type="submit" value="Применить" />
-    </form>
-    <span> {{error}} </span>
+    
+    <div class="autho-grid">
+        <div><img src="{% static 'authorization/img/logo.png' %}" width="310" height="100"></div>
+        <div class="slog"><p>Мы помогаем добывать нефть<br/>эффективно, надежно и экологично.</p></div>
+        <div class="cell-form">
+            <form method="post">
+                {% csrf_token %}
+                <div class="autho-form">
+                    <div class="autho-title"><p>Вход в систему</p></div>
+                    {% for item in form %}
+                        <div class="form-item">
+                            {{item.label_tag}}
+                            {{item}}
+                        </div>
+                    {% endfor %}
+                    <div class="autho-but">
+                        <input type="submit" value="Войти" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <span> {{error}} </span>
+        </div>
+    </div>
 </div>
 {% endblock %}

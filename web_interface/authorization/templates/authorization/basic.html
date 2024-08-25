@@ -7,10 +7,15 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'authorization/img/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'authorization/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'authorization/css/styweb.css'%}">
+    <link rel="stylesheet" href="{% static 'authorization/css/main.css' %}">
+    <link rel="stylesheet" href="{% block style %}{% endblock %}">
 
 </head>
 <body>
+    {% block nav %}
+    {% endblock %}
+
+
     {% block body %}
     {% endblock %}
     <script src="{% static 'authorization/js/bootstrap.min.js' %}"></script>

@@ -1,0 +1,29 @@
+
+.foldlist-win{
+    margin-top: 20px;
+    margin-left: 32%;
+    margin-right: 32%;
+}
+.foldlist-item{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    
+}
+
+.bt{
+    display: block;
+    background-color: #FFD311;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    border-radius: 15px;
+
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    font-size: 24px;
+}
+
+.bt:hover{
+    background-color: #ffb411;
+}

@@ -5,13 +5,15 @@ from .forms import *
 import write_log as log
 
 def showLogin(request):
+    if 'user' in request.session:
+        return redirect('devices')
     text=''
     if request.method == 'POST':
         dataform=Loginform(request.POST)
         if dataform.is_valid():
             lgn=dataform.cleaned_data.get('login')
             pswd=dataform.cleaned_data.get('password')
-            validUser=Usertab.objects.filter(login=lgn, password=pswd)#only(), defer()
+            validUser=Usertab.objects.filter(login=lgn, password=pswd)
             if validUser:
                 for i in validUser:
                     userid=i.user_id

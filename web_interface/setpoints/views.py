@@ -16,17 +16,19 @@ def showSetpoints(request, idDev):
     if not 'accesD' in request.session:
         return redirect('devices')
     accesD=request.session['accesD']
+    user=request.session['user']
     mess=''
     if not str(idDev) in accesD:
-        return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу'})
+        return render(request, 'devices/warning.html', {'text':'Извините, у Вас нет доступа к такому ресурсу<br/>Пожалуйста, используйте графический интерфейс для доступа к Вашим ресурсам', 'user':user})
     accesLvl=accesD.get(str(idDev))
-    devData=dict(Devicetab.objects.filter(device_id=idDev).values('name_user', 'description'))
+    devData=list(Devicetab.objects.filter(device_id=idDev).values('name_user', 'description'))
+    devData=dict(devData[0])
+    print(devData)
     if accesLvl < viewSetpAcc:
-        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен'})
-    user=request.session['user']
+        return render(request, 'devices/warning.html', {'text':'Извините, Ваш уровень доступа ограничен', 'user':user})
     setpoint=s.operData(idDev, False)
     if not setpoint:
-        mess='Нет связи'
+        mess='Нет связи!'
     SPd={}
     setP=Setpoints()
     if accesLvl < changSetAcc:
@@ -89,8 +91,8 @@ def showSetpoints(request, idDev):
                         mess=rmess
         setP.initial=setpoint
     if rel:
-        return render(request, 'setpoints/setpoints-rel.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
+        return render(request, 'setpoints/setpoints-rel.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess, 'devData':devData})
     else:
-        return render(request, 'setpoints/setpoints.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess})
+        return render(request, 'setpoints/setpoints.html', {'setP': setP, 'user':user, 'but':but, 'mess':mess, 'devData':devData})
     
         
