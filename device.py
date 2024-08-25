@@ -24,7 +24,7 @@ class Device:
         self.description=answear[0][4]
         self.IP=answear[0][5]
         self.port=answear[0][6]
-        if answear[0][7]=="true":
+        if answear[0][7]==1:
             self.modbus_over_tcp=True
         else:
             self.modbus_over_tcp=False
@@ -33,7 +33,7 @@ class Device:
         self.add_inv=answear[0][10]
         self.type_inv=answear[0][11]
         self.GMT=answear[0][12]
-        if answear[0][13]=="true":
+        if answear[0][13]==1:
             self.enable=True
         else:
             self.enable=False
@@ -49,6 +49,7 @@ class Device:
     def Start(self):
         self.ex_stop=False
         if self.enable:
+            print("Start device id="+str(self.id_device), file=TextWrapper.TextWrapper(self.text))
             th=Thread(target=self.Thread)
             th.start()
         
@@ -165,6 +166,7 @@ class Device:
                 if self.signal_write:
                     self.WriteSettings30()
         self.client.close()
+        print("Stop device id="+str(self.id_device), file=TextWrapper.TextWrapper(self.text))
         
     def GetData(self, req):
         srq=req.split(sep=",")
