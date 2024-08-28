@@ -57,6 +57,8 @@ def showSetpoints(request, idDev):
                     SPque={}
                 if not SPque.get(str(idDev)):
                     dictdata=correct(data)
+                    del dictdata['Username1'] #удаление имени
+                    del dictdata['Username2'] #удаление имени
                     err, mess=s.writeSP(idDev, dictdata)
                     
                     if not err:
