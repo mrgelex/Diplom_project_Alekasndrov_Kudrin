@@ -64,7 +64,7 @@ class Server:
                         conn.send(snd.encode())
                 elif self.cmd[0]=="STATUS_WRITE":
                     try:
-                        resp=self.dev[int(self.cmd[1])].GetStatusWrite(self.cmd[2])
+                        resp=self.dev[int(self.cmd[1])].GetStatusWrite()
                         snd="STATUS_WRITE;"+self.cmd[1]+";"+resp
                         conn.send(snd.encode())
                     except:
@@ -73,6 +73,7 @@ class Server:
                 else:
                     snd="UNKNOWN_COMMAND: "+data
                     conn.send(snd.encode())
+                print(snd.encode())
             except:
                 pass
         try:
