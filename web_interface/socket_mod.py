@@ -79,6 +79,9 @@ def writeSP(id, sp):
     numP=9898
     sockObj.connect((ip, numP))
     st=''
+    del sp['Username1'] #удаление имени
+    del sp['Username2'] #удаление имени
+
     for i in sp:
         if i =='EnUpECN':
             if sp.get(i):
