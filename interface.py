@@ -92,8 +92,6 @@ class main_window:
         self.but_run_server=But(self.rframe,"Запустить сервер",lambda:self.serv.Start(),TOP, pady=15)
         self.but_stop_server=But(self.rframe,"Остановить сервер",lambda:self.serv.Stop(),TOP, pady=15)
         self.but_start_web=But(self.rframe,"Запустить web",lambda:self.RunServer(),TOP, pady=15)
-        self.mb_list=("нет","да")
-        self.en_list=("нет","да")
         self.form.root.mainloop()
         
     def RunServer(self):
@@ -126,6 +124,8 @@ class scene_device:
         self.but_new_folder=But(self.left_frame_bot,"Новая группа",lambda:self.CreateFolder_form(),LEFT, padx=8)
         self.but_new_subfolder=But(self.left_frame_bot,"Новая подгруппа",lambda:self.CreateSubFolder_form(),LEFT, padx=8)
         self.but_new_device=But(self.left_frame_bot,"Новое устройство",lambda:self.CreateDevice_form(),LEFT, padx=8)
+        self.mb_list=("нет","да")
+        self.en_list=("нет","да")
         self.form_device.root.mainloop()
     
     def Tree_Refresh(self):
