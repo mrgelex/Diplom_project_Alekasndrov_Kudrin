@@ -1,10 +1,8 @@
 import socket
-#import time
 import sqlite3 as sl
 import device
 from threading import Thread
 import TextWrapper
-#from queue import Empty, Queue
 
 pathDB='web_interface/Logs.db'
 
@@ -82,7 +80,3 @@ class Server:
             pass
         print("Stop server socket", file=TextWrapper.TextWrapper(self.text))
     
-#S=Server()
-#S.Start()
-#time.sleep(30)
-#S.Stop()

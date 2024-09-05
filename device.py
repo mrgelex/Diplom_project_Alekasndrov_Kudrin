@@ -4,7 +4,6 @@ from pymodbus import Framer
 import sqlite3 as sl
 from datetime import datetime
 from threading import Thread
-from queue import Empty, Queue
 import time
 import TextWrapper
 
