@@ -92,6 +92,8 @@ class main_window:
         self.but_run_server=But(self.rframe,"Запустить сервер",lambda:self.serv.Start(),TOP, pady=15)
         self.but_stop_server=But(self.rframe,"Остановить сервер",lambda:self.serv.Stop(),TOP, pady=15)
         self.but_start_web=But(self.rframe,"Запустить web",lambda:self.RunServer(),TOP, pady=15)
+        self.mb_list=("нет","да")
+        self.en_list=("нет","да")
         self.form.root.mainloop()
         
     def RunServer(self):
@@ -260,7 +262,6 @@ class scene_device:
             self.ent_device_description=Ent(self.right_frame,"Описание",self.device_description,TOP,justify="center")
             self.ent_device_IP=Ent(self.right_frame,"IP",self.device_IP,TOP,justify="center")
             self.ent_device_port=Ent(self.right_frame,"Порт",self.device_port,TOP,justify="center")
-            self.mb_list=("нет","да")
             self.ent_device_modbus_over_tcp=Cmbox(self.right_frame,"Modbus over TCP",self.mb_list,TOP)
             if self.device_modbus_over_tcp==0:
                 self.ent_device_modbus_over_tcp.set(self.mb_list[0])
@@ -275,7 +276,6 @@ class scene_device:
             self.GMT_list=("+13","+12","+11","+10","+9","+8","+7","+6","+5","+4","+3","+2","+1","0","-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12")
             self.ent_device_GMT=Cmbox(self.right_frame,"Часовой пояс",self.GMT_list,TOP)
             self.ent_device_GMT.set(self.device_GMT)
-            self.en_list=("нет","да")
             self.ent_device_en=Cmbox(self.right_frame,"Enable",self.en_list,TOP)
             if self.device_en==0:
                 self.ent_device_en.set(self.en_list[0])
@@ -601,7 +601,7 @@ class scene_device:
             cursor.execute("""SELECT name FROM FOLDER WHERE root_folder IS NOT NULL""")
             answear=cursor.fetchall()
             self.subfolder_list=unpack(answear)
-        self.form_new_device=Form("Создать устройство","300x550")
+        self.form_new_device=Form("Создать устройство","300x580")
         self.new_cmbx_device=Cmbox(self.form_new_device.root,"Подруппа",self.subfolder_list,TOP)
         try:
             self.new_cmbx_device.set(self.subfolder_name)
